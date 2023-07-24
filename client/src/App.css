@@ -1,38 +1,132 @@
-.App {
-  text-align: center;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+:root {
+  --am-d-green: #00352F;
+  --am-m-green: #00594F;
+  --am-l-green: #cedc00;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+body {
+  /*background-color: var(--am-m-green);*/
+  background-color: #00352F;
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.header {
+  display: flex;
+  border-bottom: 1px solid var(--am-l-green);
+  padding: 1.5rem;
+  justify-content: space-around;
+  min-height: 10vh;
+  background-color: var(--am-m-green);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+h1 {
+  text-align: center;
+  font-size: 1.5rem;
+  margin: 2rem;
 }
+
+h2 {
+  text-align: center;
+  font-size: 1.3rem;
+  margin: 1.5rem;
+}
+
+.main {
+  min-height: 80vh;
+}
+
+.flex-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; 
+  gap: 2rem;
+}
+
+.flex-container-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2rem;
+  padding: 5%;
+}
+
+.content {
+  
+}
+
+.appealForm {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  gap: .5rem;
+  max-width: 400px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.appealForm input {
+  width: 250px;
+  height: 50px;
+  padding: .5rem;
+  margin: 0 auto;
+  background-color: #cedc00;
+  border: 1px solid var(--am-m-green);
+  border-radius: 5px;
+}
+
+.appealForm textarea {
+  background-color: #cedc00;
+  border: 1px solid var(--am-m-green);
+  border-radius: 5px;
+  padding: .5rem;
+}
+
+.sidebar {
+  width: 200px;
+  height: 30vh;
+  background-color: var(--am-m-green);
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+.footer {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  height: 10vh;
+  border-top: 1px solid var(--am-l-green);
+  background-color: var(--am-m-green);
+}
+
+.footerText {
+  margin-bottom: .5rem;
+  font-size: .9rem;
+}
+
+.loginWrapper {
+  width: 20rem;
+  margin: 30vh auto;
+  text-align: center;
+  /* border: 1px solid wheat; */
+}
+
+.loginResponse {
+  margin: 1rem;
+  color: red;
+}
+
+@media screen and (max-width: 700px) {
+  
+  .loginWrapper {
+    margin: 10vh auto;
+  }
+
+}
+
+
