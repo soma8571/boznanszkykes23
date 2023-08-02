@@ -1,2 +1,5 @@
 client/node_modules
+client/.env
+client/.env.development
 server/vendor
+server/assets

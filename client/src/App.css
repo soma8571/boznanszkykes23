@@ -25,6 +25,16 @@ body {
   background-color: var(--am-m-green);
 }
 
+a {
+  color: var(--am-l-green);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+  color: var(--am-l-green);
+}
+
 h1 {
   text-align: center;
   font-size: 1.5rem;
@@ -35,6 +45,12 @@ h2 {
   text-align: center;
   font-size: 1.3rem;
   margin: 1.5rem;
+}
+
+h3 {
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+  text-align: left;
 }
 
 .main {
@@ -48,6 +64,10 @@ h2 {
   gap: 2rem;
 }
 
+.clickable:hover {
+  cursor: pointer;
+}
+
 .flex-container-col {
   display: flex;
   flex-direction: column;
@@ -56,8 +76,30 @@ h2 {
   padding: 5%;
 }
 
-.content {
+/* .content {
   
+}
+ */
+ 
+div.updateMsg {
+  margin: 1rem 0;
+  padding: 1rem;
+  background-color: gainsboro;
+  color: red;
+  border-radius: 10px;
+}
+
+div.newsletterForm {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+div.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 1rem;
+  padding: 1rem;
 }
 
 .appealForm {
@@ -88,11 +130,18 @@ h2 {
 }
 
 .sidebar {
-  width: 200px;
-  height: 30vh;
   background-color: var(--am-m-green);
   border-radius: 10px;
-  padding: 1rem;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.saleSettings {
+  margin: 1.5rem 0;
+  padding: 1.5rem;
+  /*border: 1px solid var(--am-l-green);*/
+  border-radius: 10px;
+  background-color: #00594F;
 }
 
 .footer {

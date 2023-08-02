@@ -14,7 +14,7 @@ function Keszlet() {
     async function fetchData() {
       setIsLoading(true);
       try {
-        const url = "http://localhost/boznanszkykes23/server/keszlet";
+        const url = `${process.env.REACT_APP_API_URL}/keszlet`;
         const res = await axios.get(url, {
           headers: {
             Authorization: cookies.accessToken 
@@ -26,8 +26,7 @@ function Keszlet() {
             console.log(res.data);
           } else {
             setError("Űgy tűnik jelenleg nincs megjeleníthető adat.");
-          }
-          
+          }     
         }
       } catch(err) {
         console.log(err);
@@ -35,7 +34,6 @@ function Keszlet() {
         setIsLoading(false);
       }
     }
-
     fetchData();
   }, []);
 
@@ -68,14 +66,6 @@ function Keszlet() {
     return <tbody>{rows}</tbody>;
   }
 
-  /* if (isLoading) return (
-    <div>
-      <Spinner>
-      Loading...
-      </Spinner>
-    </div>
-  ); */
-
   if (error !== "") {
     return (
       <p className='errormsg'>
@@ -95,7 +85,7 @@ function Keszlet() {
           (<>
             <div className='content'>
               {data.length > 0 ? 
-              (<Table dark className='table caption-top'>
+              (<Table dark hover striped className='table caption-top'>
                 <caption>Jelenleg készleten lévő termék(ek)</caption>
                 {renderTableHeadingJSX()}
                 {renderTableData()}
@@ -103,10 +93,6 @@ function Keszlet() {
               )  
               : 
               (<p>Nincs adatunk</p>)}
-            </div>
-
-            <div className='sidebar'>
-              Sidebar
             </div>
           </>)
         }

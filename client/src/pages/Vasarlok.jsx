@@ -20,7 +20,7 @@ function Vasarlok() {
     async function fetchData() {
       setIsLoading(true);
       try {
-        const url = "http://localhost/boznanszkykes23/server/vasarlok";
+        const url = `${process.env.REACT_APP_API_URL}/vasarlok`;
         const res = await axios.get(url, {
           headers: {
             Authorization: cookies.accessToken 

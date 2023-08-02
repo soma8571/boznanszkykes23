@@ -25,7 +25,7 @@ const Login = ( { handleLogin } ) => {
         e.preventDefault();
         setLoginPending(true);
         try {
-            const url = "http://localhost/boznanszkykes23/server/index.php";
+            const url = `${process.env.REACT_APP_API_URL}/login`;
              const response = await axios.post(
                 url, 
                 { username, password }

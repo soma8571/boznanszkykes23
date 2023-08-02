@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
-import Header from './components/Header';
 import Login from "./pages/Login";
 import Main from "./pages/Main";
 import Megrendelesek from './pages/Megrendelesek';
@@ -13,13 +12,16 @@ import Vasarlok from './pages/Vasarlok';
 import Hirlevel from './pages/Hirlevel';
 import Felhivas from './pages/Felhivas';
 import Galeria from './pages/Galeria';
+import Kiszallitas from './pages/Kiszallitas';
 import Layout from './components/Layout';
+import TermekSzerk from './pages/TermekSzerk';
+import UjTermek from './pages/UjTermek';
 
 function App() {
   
   const [cookies, setCookie, removeCookie] = useCookies(["accessToken"]);
   const navigate = useNavigate();
-  const [loggedIn, setLoggedIn] = useState(false);  
+  const [loggedIn, setLoggedIn] = useState(false);
 
   useEffect(() => {
     if (cookies.accessToken === "" || !cookies.accessToken)
@@ -29,10 +31,6 @@ function App() {
 
   const handleLogin = (isLoggedIn) => {
     setLoggedIn(isLoggedIn);
-  }
-
-  function logout() {
-    removeCookie("accessToken", {path: "/"});
   }
 
   return (
@@ -51,6 +49,14 @@ function App() {
 
         <Route path="/termekek/" 
           element={<Layout content={<Main />} />}>
+        </Route>
+
+        <Route path="/uj-termek/" 
+          element={<Layout content={<UjTermek />} />}>
+        </Route>
+
+        <Route path="/termek/:termekId" 
+          element={<Layout content={<TermekSzerk />} />}>
         </Route>
 
         <Route path="/megrendelesek/" 
@@ -75,6 +81,10 @@ function App() {
 
         <Route path="/galeria/" 
           element={<Layout content={<Galeria />} />}>
+        </Route>
+
+        <Route path="/kiszallitas/" 
+          element={<Layout content={<Kiszallitas />} />}>
         </Route>
 
       </Routes>

@@ -16,7 +16,7 @@ function Felhivas() {
     async function fetchData() {
       setIsLoading(true);
       try {
-        const url = "http://localhost/boznanszkykes23/server/felhivas";
+        const url = `${process.env.REACT_APP_API_URL}/felhivas`;
         const res = await axios.get(url, {
           headers: {
             Authorization: cookies.accessToken 
@@ -44,15 +44,12 @@ function Felhivas() {
 
   async function deleteAppeal(appealID) {
     try {
-      const url = "http://localhost/boznanszkykes23/server/felhivas/" + appealID;
+      const url = `${process.env.REACT_APP_API_URL}/felhivas/${appealID}`;
       const {data} = await axios.delete(url, 
         { headers: { Authorization: cookies.accessToken }}
       );
-      //console.log(res);
       setDeleteMsg(data);
-      
     } catch(err) {
-        //console.log(err);
         setError(err);
     }
   }

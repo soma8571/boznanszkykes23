@@ -33,14 +33,34 @@ function Header() {
         <NavbarBrand href="/">Boznánszkykés</NavbarBrand>
           <Collapse isOpen={true} navbar>
             <Nav className="me-auto" navbar>
-              <NavItem>
-                <NavLink href="/termekek/">Termékek</NavLink>
-              </NavItem>
+            <UncontrolledDropdown nav inNavbar>
+                <DropdownToggle nav caret>
+                  Termék
+                </DropdownToggle>
+                <DropdownMenu>
+                  <DropdownItem>
+                    <NavItem>
+                      <NavLink 
+                        href="/termekek/" 
+                        style={{color: "black"}}>
+                          Termékek
+                      </NavLink>
+                    </NavItem>
+                  </DropdownItem>
+                  <DropdownItem>
+                    <NavItem>
+                      <NavLink 
+                        href="/uj-termek/"
+                        style={{color: "black"}}>
+                          Új termék
+                      </NavLink>
+                    </NavItem>
+                  </DropdownItem>  
+                </DropdownMenu>
+              </UncontrolledDropdown>
+
               <NavItem>
                 <NavLink href="/megrendelesek/">Megrendelések</NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink href="/keszlet/">Készlet</NavLink>
               </NavItem>
               <NavItem>
                 <NavLink href="/vasarlok/">Vásárlók</NavLink>
@@ -51,17 +71,39 @@ function Header() {
               <NavItem>
                 <NavLink href="/felhivas/">Felhívás</NavLink>
               </NavItem>
-              <NavItem>
-                <NavLink href="/galeria/">Galéria</NavLink>
-              </NavItem>
+              
               <UncontrolledDropdown nav inNavbar>
                 <DropdownToggle nav caret>
-                  Options
+                  Egyéb
                 </DropdownToggle>
                 <DropdownMenu>
-                  <DropdownItem>Option 1</DropdownItem>
-                  <DropdownItem>Option 2</DropdownItem>
-                  <DropdownItem>Reset</DropdownItem>
+                  <DropdownItem>
+                    <NavItem>
+                      <NavLink 
+                        href="/kiszallitas/" 
+                        style={{color: "black"}}>
+                          Kiszállítás
+                      </NavLink>
+                    </NavItem>
+                  </DropdownItem>
+                  <DropdownItem>
+                    <NavItem>
+                      <NavLink 
+                        href="/galeria/"
+                        style={{color: "black"}}>
+                          Galéria
+                      </NavLink>
+                    </NavItem>
+                  </DropdownItem>
+                  <DropdownItem>
+                    <NavItem>
+                      <NavLink 
+                        href="/keszlet/"
+                        style={{color: "black"}}>
+                          Készlet
+                      </NavLink>
+                    </NavItem>
+                  </DropdownItem>
                 </DropdownMenu>
               </UncontrolledDropdown>
             </Nav>

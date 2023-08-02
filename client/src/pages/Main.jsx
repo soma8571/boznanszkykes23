@@ -1,22 +1,25 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useState} from 'react';
+import { Link } from 'react-router-dom';
 import { useCookies } from "react-cookie";
-import { Spinner, Button, Table } from 'reactstrap';
+import { Spinner, Input, Button, ButtonGroup, Table } from 'reactstrap';
 import axios from 'axios';
 import { priceFormatter, knifeTypeFormatter } from '../utils/utils';
 
 function Main() {
 
   const [data, setData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
   const [cookies] = useCookies(["accessToken"]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [category, setCategory] = useState(["penknife", "dagger", "kitchen_knife"]);
 
   useEffect(() => {
     
     async function fetchData() {
       setIsLoading(true);
       try {
-        const url = "http://localhost/boznanszkykes23/server/index.php";
+        const url = `${process.env.REACT_APP_API_URL}/index.php`;
         const res = await axios.get(url, 
           { headers: 
             {Authorization: cookies.accessToken} 
@@ -25,7 +28,7 @@ function Main() {
         if (res.statusText === "OK") {
           if (Array.isArray(res.data) && res.data.length > 0) {
             setData(res.data);
-            //console.log(res.data);
+            setFilteredData(res.data);
           } else {
              //console.log("Hiba az adatok lekérése során.");
              setError("Űgy tűnik jelenleg nincs megjeleníthető adat.");
@@ -43,6 +46,14 @@ function Main() {
 
   }, []);
 
+  useEffect(() => {
+    catFilter();
+  }, [category]);
+
+  /* useEffect(() => {
+    console.log(filteredData);
+  }, [filteredData]); */
+
   const renderTableHeadingJSX = () => {
     const heading = <thead>
       <tr>
@@ -58,10 +69,10 @@ function Main() {
 
   const renderTableData = () => {
     
-    let rows = data.map((item, index) => 
+    let rows = filteredData.map((item, index) => 
       <tr key={index}>
         <td>{index + 1}</td>
-        <td>{item.name}</td>
+        <td><Link to={`/termek/${item.id_knives}`}>{item.name}</Link></td>
         <td>{knifeTypeFormatter(item.type)}</td>
         <td>{item.subcategory_name}</td>
         <td>{priceFormatter(item.price)}</td>
@@ -78,6 +89,35 @@ function Main() {
     );
   }
 
+  const handleChange = (e) => {
+    const {value} = e.target;
+    if (value.length > 2) {
+      const filtered = data.filter(item => item.name.toLowerCase().includes(value));
+      setFilteredData(filtered);
+    } else {
+      setFilteredData(data);
+    }
+  }
+
+  const handleCatChange = (cat) => {
+    let index = category.indexOf(cat);
+    if (index < 0) {
+      //nincs benne
+      category.push(cat);
+    } else {
+      category.splice(index, 1);
+    }
+    setCategory([...category]);
+  }
+
+  const catFilter = () => {
+    const catFiltered = data.filter(item => category.includes(item.type));
+    //console.log(catFiltered);
+    setFilteredData(catFiltered);
+  }
+
+  
+
   return (
     <div>
       <h1>Termékek</h1>
@@ -88,18 +128,57 @@ function Main() {
           :
           (<>
             <div className='content'>
-              {data.length > 0 ? 
-              (<Table dark className='table caption-top'>
-                {renderTableHeadingJSX()}
-                {renderTableData()}
-              </Table>
-              )  
-              : 
-              (<p>Nincs adatunk</p>)}
+              {data.length > 0 ?
+                 
+                (<><Input
+                  className="mb-3"
+                  placeholder="Keresett termék"
+                  onChange={handleChange}
+                  style={{ backgroundColor: "#cedc00" }}
+                />
+                {filteredData.length > 0 ?
+                  (<Table dark striped hover className='table caption-top'>
+                    {renderTableHeadingJSX()}
+                    {renderTableData()}
+                  </Table>
+                  )  
+                  : 
+                  (<p>Nincs megjeleníthető találat.</p>)}
+                
+                </>)
+                :
+                (<p>Nincs megjeleníthető adat.</p>)
+              }
             </div>
 
             <div className='sidebar'>
-              Sidebar
+            <h3>Termék kategória szűrő</h3>
+            <ButtonGroup vertical>
+              <Button
+                color='light'
+                outline
+                onClick={() => handleCatChange("penknife")}
+                active={category.includes("penknife")}
+              >
+                Bicska
+              </Button>
+              <Button
+                color='light'
+                outline
+                onClick={() => handleCatChange("kitchen_knife")}
+                active={category.includes("kitchen_knife")}
+              >
+                Konyhakés
+              </Button>
+              <Button
+                color='light'
+                outline
+                onClick={() => handleCatChange("dagger")}
+                active={category.includes("dagger")}
+              >
+                Tőr
+              </Button>
+            </ButtonGroup>
             </div>
           </>)
         }

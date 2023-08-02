@@ -14,7 +14,7 @@ function AppealForm( {setNewAppeal} ) {
     });
 
   async function postAppeal() {
-    const url = "http://localhost/boznanszkykes23/server/felhivas";
+    const url = `${process.env.REACT_APP_API_URL}/felhivas`;
     try {
         const {data} = await axios.post(url, 
             { appeal },
