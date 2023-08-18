@@ -1,5 +1,8 @@
 client/node_modules
+client/build
 client/.env
 client/.env.development
 server/vendor
 server/assets
+server/teszt.php
+server/.htaccess

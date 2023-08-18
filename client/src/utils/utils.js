@@ -59,7 +59,7 @@ export function deliveryStatusFormatter(status) {
             return "Függőben";
         case "CANCELLED":
             return "Visszavont";
-        case "COMPLETED ":
+        case "COMPLETED":
             return "Teljesült";
         default:
             return status;

@@ -5,8 +5,7 @@ import {
   ModalFooter,
   ModalHeader,
   Button,
-  Table,
-  Input
+  Table
 } from "reactstrap";
 import {priceFormatter} from '../utils/utils.js';
 import axios from "axios";
@@ -22,6 +21,7 @@ function MyModal({ isOpen, toggle, orderData }) {
   if (Array.isArray(orderData) && orderData.length > 0) {
     if (Array.isArray(orderData[0]) && orderData[0].length > 0) {
       orderInfo = orderData[0];
+      //console.log(orderInfo);
     }
 
     if (Array.isArray(orderData[1]) && orderData[1].length > 0) {
@@ -52,10 +52,10 @@ function MyModal({ isOpen, toggle, orderData }) {
       <tr key={customerInfo["postAddress"]}>
         <td>Postai cím</td><td>{postAddress}</td>
       </tr>
-      <tr key={customerInfo["billName"]}>
+      <tr key="billname">
         <td>Számlázási név</td><td>{customerInfo["bill_name"] ? customerInfo["bill_name"] : "postaival azonos"}</td>
       </tr>
-      <tr key={customerInfo["billAddress"]}>
+      <tr key="billaddress">
         <td>Számlázási cím</td><td>{billAddress}</td>
       </tr>
     </>);
@@ -66,6 +66,8 @@ function MyModal({ isOpen, toggle, orderData }) {
     let header = (
       <tr key="header">
         <th>Termék név</th>
+        <th>Penge</th>
+        <th>Leírás</th>
         <th>Mennyiség</th>
         <th>Egységár</th>
         <th>Tétel összesen</th>
@@ -81,6 +83,8 @@ function MyModal({ isOpen, toggle, orderData }) {
       let row = (
         <tr key={i}>
           <td key={`${i}-kname`}>{orderInfo[i]["kname"]}</td>
+          <td key={`${i}-blade`}>{orderInfo[i]["blade_material"]}</td>
+          <td key={`${i}-desc`} style={{ maxWidth: "12rem" }}>{orderInfo[i]["description"]}</td>
           <td key={`${i}-quantity`}>{orderInfo[i]["quantity"]} db</td>
           <td key={`${i}-price`}>{priceFormatter(orderInfo[i]["price"])}</td>
           <td key={`${i}-total`}>{priceFormatter(orderInfo[i]["quantity"] * orderInfo[i]["price"])}</td>
@@ -89,39 +93,50 @@ function MyModal({ isOpen, toggle, orderData }) {
         rows.push(row);
       }
       let staticRows = (<>
-        <tr key="sum">
-          <td key="sum1" colSpan={3}>Rendelés összértéke:</td>
-          <td key="sum2" colSpan={1}>{priceFormatter(sum)}</td>
+        <tr>
+          <td colSpan={5}>Rendelés összértéke:</td>
+          <td colSpan={1}>{priceFormatter(sum)}</td>
         </tr>
-        <tr key="date">
-          <td key="date1" colSpan={2}>Rendelés dátuma:</td>
-          <td key="date2" colSpan={2}>{orderInfo[0]["date"]}</td>
+        <tr>
+          <td>Rendelés dátuma:</td>
+          <td colSpan={5}>{orderInfo[0]["date"]}</td>
         </tr>
-        <tr key="comment">
-          <td key="comm1" colSpan={2}>Megjegyzés:</td>
-          <td key="comm2" colSpan={2}>{orderInfo[0]["comment"]}</td>
+        <tr>
+          <td>Vásárlói megjegyzés:</td>
+          <td colSpan={5}>{orderInfo[0]["comment"]}</td>
         </tr>
-        <tr key="status">
-          <td key="stat1" colSpan={2}>Rendelés státusza:</td>
-          <td key="stat2" colSpan={2}>
-            <Input 
-              style={{ backgroundColor: "#cedc00" }}
-              type="select"
+        <tr>
+          <td>Rendelés státusza:</td>
+          <td colSpan={1}>
+            <select 
+              style={{ backgroundColor: "#cedc00", padding: "0.5rem 1rem"}}
               name="orderStatus"
               data-id={orderInfo[0]["id_deliveries"]}
               defaultValue={orderInfo[0]["status"]}
-              onChange={e => handleStatusChange(e)}
-              >
-                <option key="pending" value="PENDING">Elintézetlen</option>
-                <option key="completed" value="COMPLETED">Teljesült</option>
-                <option key="cancelled" value="CANCELLED">Visszavont</option>
-            </Input>
+              onChange={e => handleStatusChange(e)}>
+                {renderStateOptions(orderInfo[0]["status"])}
+            </select>
           </td>
+          <td colSpan={4}></td>
         </tr></>
       )
       rows.push(staticRows);
-      return <tbody key="unique-tbody">{rows}</tbody>;
+      return <tbody>{rows}</tbody>;
     }
+
+    const orderStates = [
+      { value: "PENDING", label: "Elintézetlen"},
+      { value: "COMPLETED", label: "Teljesült"},
+      { value: "CANCELLED", label: "Visszavont"}
+    ];
+
+    function renderStateOptions(status) {
+      const options = orderStates.map((option, ind) => 
+        <option value={option.value} key={ind} selected={option.value === status}>
+          {option.label}
+        </option>);
+      return options;
+    } 
 
     function handleStatusChange(e) {
       const status = e.target.value;
@@ -144,7 +159,7 @@ function MyModal({ isOpen, toggle, orderData }) {
     
 
   return (
-    <Modal isOpen={isOpen} toggle={toggle} size="lg">
+    <Modal isOpen={isOpen} toggle={toggle} fullscreen>
       <ModalHeader 
         toggle={toggle} 
         style={{ backgroundColor: "#00594F" }}

@@ -23,7 +23,6 @@ function Keszlet() {
         if (res.statusText === "OK") {
           if (Array.isArray(res.data) && res.data.length > 0) {
             setData(res.data);
-            console.log(res.data);
           } else {
             setError("Űgy tűnik jelenleg nincs megjeleníthető adat.");
           }     

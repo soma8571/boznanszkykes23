@@ -13,6 +13,7 @@ function Main() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [category, setCategory] = useState(["penknife", "dagger", "kitchen_knife"]);
+  const [imageSrc, setImageSrc] = useState("");
 
   useEffect(() => {
     
@@ -58,6 +59,7 @@ function Main() {
     const heading = <thead>
       <tr>
         <td>#</td>
+        <td>Kép</td>
         <td>Termék név</td>
         <td>Típus</td>
         <td>Alkategória</td>
@@ -67,17 +69,60 @@ function Main() {
     return heading;
   }
 
-  const renderTableData = () => {
+ /*  useEffect(()=>{
+    downloadProductThumbnail(9);
+  }, []); */
+
+  async function downloadProductThumbnail(productId) {
+    try {
+      const url = `${process.env.REACT_APP_API_URL}/termekProfilTn/${productId}`;
+      const {data} = await axios.get(url, 
+        {responseType: "arraybuffer"});
+      if (data.byteLength > 0) {
+          const blob = new Blob([data], { type: 'image/jpeg' });
+          return URL.createObjectURL(blob);
+      } else return false; 
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async function renderThumbnail(path, alt, productId) {
+    if (!path) return "Nincs kép";
+    //const baseUrl = "https://www.boznanszkykes.hu/uploads/";
+    let src = await downloadProductThumbnail(productId);
+    const thumbnail =(<img 
+      src={src} 
+      key={path} 
+      alt={alt} 
+      loading='lazy'
+    />);
+    return thumbnail;
+  }
+
+  const renderIsAvailable = (availbale) => {
+    if (availbale === 1) return "Elérhető";
+    else return "Nem elérhető";
+  }
+
+  async function renderTableData() {
     
-    let rows = filteredData.map((item, index) => 
-      <tr key={index}>
-        <td>{index + 1}</td>
-        <td><Link to={`/termek/${item.id_knives}`}>{item.name}</Link></td>
+    let rows = await Promise.all(filteredData.map(async (item, index) => {
+      const thumbnailSrc = await downloadProductThumbnail(item.id_knives);
+      return (
+        <tr key={index} style={{ verticalAlign: "middle" }}>
+        {/* <td>{index + 1}</td>
+        {thumbnailSrc ? (<td><img src={thumbnailSrc} alt={item.name} loading='lazy'/></td>) : (<td>Nincs kép</td>)} */}
+        
+        <td><Link to={`/termek/${item.id_knives}`}>{item.name}</Link>
+          <br /> {renderIsAvailable(item.available)}
+        </td>
         <td>{knifeTypeFormatter(item.type)}</td>
         <td>{item.subcategory_name}</td>
         <td>{priceFormatter(item.price)}</td>
       </tr>
-    );
+      );
+    }));
     return <tbody>{rows}</tbody>;
   }
 

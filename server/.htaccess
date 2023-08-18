@@ -5,8 +5,11 @@
   RewriteCond %{REQUEST_URI} ^.*public/(.*)
   RewriteRule ^(.*)$ public/%1 [END]
 
+  RewriteCond %{REQUEST_URI} ^.*assets/(.*)
+  RewriteRule ^(.*)$ assets/%1 [END]
+
   # Minden más esetben az index.php-t futtasd le
-  RewriteRule (.*)  index.php [QSA]
+  RewriteRule (.*) index.php [QSA]
 
   setEnv JWT_TOKEN_SECRET mysecret
   setEnv DB_HOST localhost

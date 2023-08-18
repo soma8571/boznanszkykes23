@@ -5,7 +5,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
 import Login from "./pages/Login";
-import Main from "./pages/Main";
 import Megrendelesek from './pages/Megrendelesek';
 import Keszlet from './pages/Keszlet';
 import Vasarlok from './pages/Vasarlok';
@@ -16,6 +15,7 @@ import Kiszallitas from './pages/Kiszallitas';
 import Layout from './components/Layout';
 import TermekSzerk from './pages/TermekSzerk';
 import UjTermek from './pages/UjTermek';
+import ProductList from './pages/ProductList';
 
 function App() {
   
@@ -44,11 +44,11 @@ function App() {
         </Route>
 
         <Route path="/" 
-          element={<Layout content={<Main/>} />}>
+          element={<Layout content={<Megrendelesek />} />}>
         </Route>
 
         <Route path="/termekek/" 
-          element={<Layout content={<Main />} />}>
+          element={<Layout content={<ProductList />} />}>
         </Route>
 
         <Route path="/uj-termek/" 

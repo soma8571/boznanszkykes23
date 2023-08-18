@@ -15,15 +15,36 @@ function megrendelesek() {
                     ORDER BY o.date ASC";
     $statement = $pdo->prepare($query);
     $statement->execute();
-    $data = $statement->fetchAll(PDO::FETCH_ASSOC);
-    echo json_encode($data);
-    //echo json_encode(["msg" => "working from an another file."]);
+    $data_pending = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+    //legutóbbi 20 teljesült megrendelés lekérése
+    $query = "SELECT d.id_deliveries, d.status, o.date, d.modify_date, k.name as kname, c.name AS cname
+                FROM deliveries d 
+                    INNER JOIN orders o 
+                        ON o.deliveries_id_deliveries = d.id_deliveries
+                    INNER JOIN knives k
+                        ON o.knives_id_knives = k.id_knives
+                    INNER JOIN customers c
+                        ON o.customers_id_customers = c.id_customers
+                    WHERE d.status = 'COMPLETED'
+                    ORDER BY o.date DESC
+                    LIMIT 20";
+    $statement = $pdo->prepare($query);
+    $statement->execute();
+    $data_completed = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+    /* $all_data = [
+        0 => $data_pending,
+        1 => $data_completed
+        ]; */
+    $all_data = array_merge($data_pending, $data_completed);
+    echo json_encode($all_data, JSON_PRETTY_PRINT);
 }
 
 function megrendelesAdatok($vars) {
     auth();
     $pdo = getConnection();
-    $query = "SELECT k.name AS kname, o.price, o.quantity, o.date, o.comment, d.*
+    $query = "SELECT k.name AS kname, k.blade_material, k.description, o.price, o.quantity, o.date, o.comment, d.*
                 FROM orders o
                     INNER JOIN knives k ON o.knives_id_knives = k.id_knives  
                     INNER JOIN deliveries d ON o.deliveries_id_deliveries = d.id_deliveries

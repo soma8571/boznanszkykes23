@@ -18,7 +18,6 @@ function Kiszallitas() {
             try {   
                 const {data} = await axios.get(url, 
                     { headers: { Authorization: cookie.accessToken }});
-                console.log(data);
                 if (Array.isArray(data) && data.length > 0) {
                     setDeliveryData(data);
                     setError("");
@@ -82,21 +81,6 @@ function Kiszallitas() {
         );
         return <tbody>{rows}</tbody>;
       }
-
-      /* const renderTableDataJSX2 = (data) => {
-        let row = [];
-        let rows = [];
-        const tableBody = data.map((item, index) => {
-            for (let k in item) {
-                let cell = <td key={`${k}-${index}`}>{item[k]}</td>;
-                row.push(cell); 
-            }
-            rows.push(<tr key={index}>{row}</tr>);
-            row = [];
-        });
-        console.log(tableBody);
-        return <tbody>{tableBody}</tbody>;
-      } */
 
   return (
     <div>

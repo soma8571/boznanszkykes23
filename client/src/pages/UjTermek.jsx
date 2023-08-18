@@ -45,10 +45,6 @@ function UjTermek() {
     }
   }, [responseMsg]);
 
-  useEffect(() => {
-    console.log(newProductData);
-  }, [newProductData]);
-
   async function fetchTermekAlkategoriak() {
     setIsLoading(true);
     try {
@@ -93,7 +89,7 @@ function UjTermek() {
             {Authorization: cookie.accessToken} 
         });
       setResponseMsg(data.msg);
-      console.log(data);
+      //console.log(data);
     } catch (err) {
         console.log(err);
     }

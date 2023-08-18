@@ -49,7 +49,7 @@ function Vasarlok() {
   async function getCustomerData(customer_id) {
     setIsLoading(true);
     try {
-      const url = "http://localhost/boznanszkykes23/server/vasarlo/" + customer_id;
+      const url = `${process.env.REACT_APP_API_URL}/vasarlo/${customer_id}`;
       const res = await axios.get(url, {
         headers: {
           Authorization: cookies.accessToken 

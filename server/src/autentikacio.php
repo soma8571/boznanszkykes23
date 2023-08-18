@@ -55,7 +55,7 @@ function login($vars, $body) {
 
 function isUserValid($body)
 {
-    return $body['username'] === "admin" && $body['password'] === "soma85";
+    return $body['username'] === "admin" && $body['password'] === "bozi2023";
 }
 
 function auth() {
@@ -127,7 +127,7 @@ function decodeJwtOrSendErrorResponse($token) {
         );
         return (array)$decoded;
 
-    } catch(\Firebase\JWT\ExpiredException) {
+    } catch(\Firebase\JWT\ExpiredException $e) {
         http_response_code(401);
         header('Content-type: application/json');
         echo json_encode(['error' => 'token expired']);

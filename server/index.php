@@ -2,10 +2,13 @@
 
 require __DIR__."/src/common.php";
 
+$folder = "";
 if ($_SERVER['SERVER_NAME'] === "localhost") {
     header("Access-Control-Allow-Origin: http://localhost:3000");
+    $folder = "/boznanszkykes23/";
 } else {
     header("Access-Control-Allow-Origin: http://admin.boznanszkykes.hu");
+    $folder = "/";
 }
 
 header("Access-Control-Allow-Methods: GET, POST, PATCH, OPTIONS, DELETE");
@@ -19,51 +22,60 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     exit;
 }
 
-$dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
+$dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) use ($folder) {
     
-    $r->addRoute('POST', '/boznanszkykes23/server/login', 'login');
-    $r->addRoute('GET', '/boznanszkykes23/server/index.php', 'home');
+    $r->addRoute('POST', $folder.'server/login', 'login');
+    $r->addRoute('GET', $folder.'server/index.php', 'home');
 
     //termek.php
-    $r->addRoute('GET', '/boznanszkykes23/server/termek/{id}', 'termekAdatok');
-    $r->addRoute('GET', '/boznanszkykes23/server/termekkepek/{id}', 'termekKepek');
-    $r->addRoute('GET', '/boznanszkykes23/server/termekakcio/{id}', 'termekAkcio');
-    $r->addRoute('POST', '/boznanszkykes23/server/termekakcio/{id}', 'termekAkcioMentese');
-    $r->addRoute('DELETE', '/boznanszkykes23/server/termekakcio/{id}', 'termekAkcioTorlese');
-    $r->addRoute('GET', '/boznanszkykes23/server/termekalkategoriak', 'termekalkategoriak');
-    $r->addRoute('PATCH', '/boznanszkykes23/server/termek/{id}', 'termekAdatUpdate');
+    $r->addRoute('GET', $folder.'server/termek/{id}', 'termekAdatok');
+    $r->addRoute('GET', $folder.'server/termekkepek/{id}', 'termekKepek');
+    $r->addRoute('GET', $folder.'server/termekakcio/{id}', 'termekAkcio');
+    $r->addRoute('POST', $folder.'server/termekakcio/{id}', 'termekAkcioMentese');
+    $r->addRoute('DELETE', $folder.'server/termekakcio/{id}', 'termekAkcioTorlese');
+    $r->addRoute('GET', $folder.'server/termekalkategoriak', 'termekalkategoriak');
+    $r->addRoute('PATCH', $folder.'server/termek/{id}', 'termekAdatUpdate');
     //új termék: visszaad egy rekordot a knives táblából, ez alapján a sablon alapján képezünk kliens oldalon egy üres termék objektumot
-    $r->addRoute('GET', '/boznanszkykes23/server/termeksablon/', 'termekSablon');
-    $r->addRoute('POST', '/boznanszkykes23/server/uj-termek/', 'ujTermek');
-    
+    $r->addRoute('GET', $folder.'server/termeksablon/', 'termekSablon');
+    $r->addRoute('POST', $folder.'server/uj-termek/', 'ujTermek');
+    $r->addRoute('POST', $folder.'server/kepfeltoltes/{id}', 'kepfeltoltes');
+    $r->addRoute('GET', $folder.'server/termekProfilTn/{id}', 'termekProfilThumbnail');
+
+    //Termék kép törlése
+    $r->addRoute('DELETE', $folder.'server/termekkeptorlese/{id}', 'termekKepTorlese');
+
+    //Termék Profilkép megváltoztatása
+    $r->addRoute('PATCH', $folder.'server/termekprofilmodositas/{id}', 'termekProfilModositas');
+
     //megrendelesek.php
-    $r->addRoute('GET', '/boznanszkykes23/server/megrendelesek', 'megrendelesek');
-    $r->addRoute('GET', '/boznanszkykes23/server/megrendeles/{id}', 'megrendelesAdatok');
+    $r->addRoute('GET', $folder.'server/megrendelesek', 'megrendelesek');
+    $r->addRoute('GET', $folder.'server/megrendeles/{id}', 'megrendelesAdatok');
 
     //vasarlok.php
-    $r->addRoute('GET', '/boznanszkykes23/server/vasarlok', 'vasarlok');
-    $r->addRoute('GET', '/boznanszkykes23/server/vasarlo/{id}', 'vasarloAdatok');
+    $r->addRoute('GET', $folder.'server/vasarlok', 'vasarlok');
+    $r->addRoute('GET', $folder.'server/vasarlo/{id}', 'vasarloAdatok');
 
     //keszlet.php
-    $r->addRoute('GET', '/boznanszkykes23/server/keszlet', 'keszlet');
+    $r->addRoute('GET', $folder.'server/keszlet', 'keszlet');
     
     //felhivas.php
-    $r->addRoute('GET', '/boznanszkykes23/server/felhivas', 'felhivas');
-    $r->addRoute('POST', '/boznanszkykes23/server/felhivas', 'ujFelhivas');
-    $r->addRoute('DELETE', '/boznanszkykes23/server/felhivas/{id}', 'felhivasTorlese');
+    $r->addRoute('GET', $folder.'server/felhivas', 'felhivas');
+    $r->addRoute('POST', $folder.'server/felhivas', 'ujFelhivas');
+    $r->addRoute('DELETE', $folder.'server/felhivas/{id}', 'felhivasTorlese');
 
     //kiszallitas.php
-    $r->addRoute('GET', '/boznanszkykes23/server/kiszallitas', 'kiszallitas');
-    $r->addRoute('POST', '/boznanszkykes23/server/kiszallitas', 'ujKiszallitasiKoltseg');
-    $r->addRoute('DELETE', '/boznanszkykes23/server/kiszallitas/{id}', 'kiszallitasiKoltsegTorlese');
-    $r->addRoute('PATCH', '/boznanszkykes23/server/kiszallitas/{id}', 'kiszallitasStatuszModositas');
+    $r->addRoute('GET', $folder.'server/kiszallitas', 'kiszallitas');
+    $r->addRoute('POST', $folder.'server/kiszallitas', 'ujKiszallitasiKoltseg');
+    $r->addRoute('DELETE', $folder.'server/kiszallitas/{id}', 'kiszallitasiKoltsegTorlese');
+    $r->addRoute('PATCH', $folder.'server/kiszallitas/{id}', 'kiszallitasStatuszModositas');
 
     //hirlevel.php
-    $r->addRoute('POST', '/boznanszkykes23/server/hirlevel', 'hirlevelMentese');
+    $r->addRoute('POST', $folder.'server/hirlevel', 'hirlevelMentese');
 
     //galeria.php
-    $r->addRoute('GET', '/boznanszkykes23/server/galeria', 'galeriaKepek');
-    $r->addRoute('PATCH', '/boznanszkykes23/server/galeria/{id}', 'lathatosagModositas');
+    $r->addRoute('GET', $folder.'server/galeria', 'galeriaKepek');
+    $r->addRoute('PATCH', $folder.'server/galeria/{id}', 'lathatosagModositas');
+    $r->addRoute('DELETE', $folder.'server/galeria/{id}', 'galeriaKepTorlese');
    
 });
 
@@ -93,25 +105,34 @@ function home() {
     //Termékek listája
     auth();
     $pdo = getConnection();
-    $query = "SELECT id_knives, name, k.type, subcategory_name, price
+    $query = "SELECT id_knives, name, k.type, k.available, subcategory_name, price, pi.thumbnail_path
                 FROM knives k 
                     LEFT JOIN knives_subcategories ks
-                    ON k.type_subcategory = ks.idknives_subcategories";
+                        ON k.type_subcategory = ks.idknives_subcategories
+                    LEFT JOIN product_images pi
+                        ON k.id_knives = pi.knives_id
+                WHERE pi.profil = 1 OR pi.profil IS NULL";
     $statement = $pdo->prepare($query);
     $statement->execute();
     $data = $statement->fetchAll(PDO::FETCH_ASSOC);
     echo json_encode($data);
+    //echo json_encode(["msg" => "home lefut"]);
 
 }
 
 function getConnection() {
     
     try {
-        return new PDO(
+        $conn = new PDO(
             "mysql:host=" . $_SERVER['DB_HOST'] . 
             ";dbname=" . $_SERVER['DB_NAME'], 
             $_SERVER['DB_USER'], 
             $_SERVER['DB_PASS']);
+        $query = "SET NAMES UTF8";
+        $statement = $conn->prepare($query);
+        $statement->execute();
+        return $conn;
+
     } catch (PDOException $e) {
         echo json_encode(["DB connection error: " => $e->getMessage()]);
     }

@@ -6,6 +6,7 @@ import {Input, Spinner, Button, Table} from "reactstrap";
 import { knifeDataFormatter, knifeTypes } from '../utils/utils';
 import ShowMsgModal from "../components/ShowMsgModal";
 import SaleForm from '../components/SaleForm';
+import ProductPictures from '../components/ProductPictures';
 
 export default function TermekSzerk() {
 
@@ -16,8 +17,10 @@ export default function TermekSzerk() {
     const [cookie] = useCookies(["accessToken"]);
     const [isLoading, setIsLoading] = useState(false);
     const [responseMsg, setResponseMsg] = useState("");
-    const [imageSrc, setImageSrc] = useState("");
+    
     const [modal, setModal] = useState(false);
+    const availableDesc = "'Nem' érték esetén egyáltalán nem jelenik meg a vásárló számára.";
+    const hideIfSoldOutDesc = "'Igen' érték esetén a termék csak akkor jelenik meg, ha a készlete nagyobb, mint 0.";
   
     const toggle = () => {
         setModal(!modal);
@@ -41,7 +44,6 @@ export default function TermekSzerk() {
     useEffect(() => {
         if (productSubCats.length > 0) {
             fetchTermekAdat();
-            downloadImages();
         }
     }, [productSubCats]);
 
@@ -74,27 +76,6 @@ export default function TermekSzerk() {
             const temp = convertNullToEmptyStr(data[0]);
             //console.log(temp);
             setProductData(temp);
-        } catch (err) {
-            console.log(err);
-        } finally {
-            setIsLoading(false);
-        }
-    }
-
-    async function downloadImages() {
-        setIsLoading(true);
-        try {
-            const url = `${process.env.REACT_APP_API_URL}/termekkepek/${termekId}`;
-            const res = await axios.get(url, 
-            { responseType: "arraybuffer" },
-            { headers: 
-                {Authorization: cookie.accessToken} 
-            });
-            if (res.data.byteLength > 0) {
-                const blob = new Blob([res.data], { type: 'image/jpeg' });
-                setImageSrc(URL.createObjectURL(blob));
-            }
-            
         } catch (err) {
             console.log(err);
         } finally {
@@ -213,7 +194,20 @@ export default function TermekSzerk() {
             } 
             else if (kulcs === "available" || kulcs === "buyable" || kulcs === "hide_if_sold_out") {
                 row = (<tr key={kulcs}>
-                    <td>{knifeDataFormatter(kulcs)}</td>
+                    <td>{knifeDataFormatter(kulcs)}
+                        {kulcs === "available" && <div className="info-icon">
+                            <span>i</span>
+                            <div className="info-content">
+                                {availableDesc}
+                            </div>
+                        </div>}
+                        {kulcs === "hide_if_sold_out" && <div className="info-icon">
+                            <span>i</span>
+                            <div className="info-content">
+                                {hideIfSoldOutDesc}
+                            </div>
+                        </div>}
+                    </td>
                     <td><Input 
                             name={kulcs}
                             type='select' 
@@ -244,6 +238,10 @@ export default function TermekSzerk() {
         return <tbody>{rows}</tbody>;
     }
 
+    
+
+    
+
   return (
     <div>
         <h1>Termék adatok szerkesztése</h1>
@@ -268,11 +266,9 @@ export default function TermekSzerk() {
             </div>
 
             <div className='content'>
-                {imageSrc && imageSrc !== "" ? 
-                    (<img src={imageSrc} id="myimg" alt="kep" />) 
-                    : 
-                    (<p>Nincs megjeleníthető kép.</p>)
-                }
+                
+                <ProductPictures termekId={termekId} />
+
                 <div style={{ margin: "1.5rem 0" }}>
                     <SaleForm termekId={termekId} />
                 </div>
