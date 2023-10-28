@@ -53,7 +53,7 @@ export default function TermekSzerk() {
             const url = `${process.env.REACT_APP_API_URL}/termekalkategoriak`;
             const {data} = await axios.get(url, 
             { headers: 
-                {Authorization: cookie.accessToken} 
+                { Authorization: `Bearer ${cookie.accessToken}` } 
             });
             setProductSubCats(data);
             //console.log(data);
@@ -70,7 +70,7 @@ export default function TermekSzerk() {
             const url = `${process.env.REACT_APP_API_URL}/termek/${termekId}`;
             const {data} = await axios.get(url, 
             { headers: 
-                {Authorization: cookie.accessToken} 
+                { Authorization: `Bearer ${cookie.accessToken}` }
             });
             //azért, hogy textarea-ba ne kerülhessen "null" érték, mivel ez egy utólagosan bevezetett mező és alapból null értékkel szerepel
             const temp = convertNullToEmptyStr(data[0]);
@@ -89,7 +89,7 @@ export default function TermekSzerk() {
             const {data} = await axios.patch(url, 
                 { productData },
                 { headers: 
-                    {Authorization: cookie.accessToken} 
+                    { Authorization: `Bearer ${cookie.accessToken}` } 
                 });
             //console.log(data);
             setResponseMsg(data.msg);

@@ -51,7 +51,7 @@ function UjTermek() {
         const url = `${process.env.REACT_APP_API_URL}/termekalkategoriak`;
         const {data} = await axios.get(url, 
         { headers: 
-            {Authorization: cookie.accessToken} 
+          { Authorization: `Bearer ${cookie.accessToken}` } 
         });
         setProductSubCats(data);
         //console.log(data);
@@ -68,7 +68,7 @@ function UjTermek() {
           const url = `${process.env.REACT_APP_API_URL}/termeksablon/`;
           const {data} = await axios.get(url, 
           { headers: 
-              {Authorization: cookie.accessToken} 
+            { Authorization: `Bearer ${cookie.accessToken}` } 
           });
           //console.log(data);
           const emptyObject = createEmptyTemplate(data[0]);
@@ -86,7 +86,7 @@ function UjTermek() {
       const {data} = await axios.post(url,
         { newProductData },  
         { headers: 
-            {Authorization: cookie.accessToken} 
+          { Authorization: `Bearer ${cookie.accessToken}` } 
         });
       setResponseMsg(data.msg);
       //console.log(data);

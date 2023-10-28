@@ -34,20 +34,18 @@ function Megrendelesek() {
     try {
       const url = `${process.env.REACT_APP_API_URL}/megrendelesek`;
       const res = await axios.get(url, {
-        headers: {
-          Authorization: cookies.accessToken,
-        },
-      });
-      if (res.statusText === "OK") {
-        if (Array.isArray(res.data) && res.data.length > 0) {
-          setData(res.data);
-          //console.log(res.data);
-        } else {
-          console.log(res.data);
-          setError("Űgy tűnik jelenleg nincs megjeleníthető adat.");
+        headers: 
+          { Authorization: `Bearer ${cookies.accessToken}` }
         }
-        setIsLoading(false);
+      );
+      if (Array.isArray(res.data) && res.data.length > 0) {
+        setData(res.data);
+        //console.log(res.data);
+      } else {
+        console.log(res.data);
+        setError("Űgy tűnik jelenleg nincs megjeleníthető adat.");
       }
+      setIsLoading(false);
     } catch (err) {
       //console.log(err);
       setIsLoading(false);
@@ -60,16 +58,15 @@ function Megrendelesek() {
       const url = `${process.env.REACT_APP_API_URL}/megrendeles/${id}`;
       const res = await axios.get(url, {
         headers: {
-          Authorization: cookies.accessToken,
+           Authorization: `Bearer ${cookies.accessToken}` 
         },
       });
-      if (res.statusText === "OK") {
-        if (Array.isArray(res.data) && res.data.length > 0) {
-          setDeliveryData(res.data);
-          //console.log(res.data);
-        } else {
-          setError("Űgy tűnik jelenleg nincs megjeleníthető adat.");
-        }
+      if (Array.isArray(res.data) && res.data.length > 0) {
+        setDeliveryData(res.data);
+        //console.log(res.data);
+      } else {
+        console.log(res);
+        setError("Űgy tűnik jelenleg nincs megjeleníthető adat.");
       }
     } catch (err) {
       setError(err);

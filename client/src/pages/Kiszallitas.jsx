@@ -17,7 +17,9 @@ function Kiszallitas() {
             const url = `${process.env.REACT_APP_API_URL}/kiszallitas`;
             try {   
                 const {data} = await axios.get(url, 
-                    { headers: { Authorization: cookie.accessToken }});
+                    { headers: 
+                        { Authorization: `Bearer ${cookie.accessToken}` }
+                    });
                 if (Array.isArray(data) && data.length > 0) {
                     setDeliveryData(data);
                     setError("");
@@ -35,7 +37,9 @@ function Kiszallitas() {
         try {
             const url = `${process.env.REACT_APP_API_URL}/kiszallitas/${dc_id}`;
             const {data} = await axios.delete(url, 
-                {headers: { Authorization: cookie.accessToken }});
+                {headers: 
+                    { Authorization: `Bearer ${cookie.accessToken}` }
+                });
             setDeleteMsg(data);
         } catch(err) {
             console.log(err);

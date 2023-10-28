@@ -50,7 +50,7 @@ function Galeria() {
         const url = `${process.env.REACT_APP_API_URL}/galeria`;
         const {data} = await axios.get(url, 
         { headers: 
-            {Authorization: cookie.accessToken} 
+          { Authorization: `Bearer ${cookie.accessToken}` } 
         });
         //console.log(data);
         setImages(data);
@@ -67,7 +67,7 @@ function Galeria() {
       const {data} = await axios.patch(url, 
         { visibility },
         { headers: 
-            {Authorization: cookie.accessToken} 
+          { Authorization: `Bearer ${cookie.accessToken}` } 
         });
         //console.log(data);
         setResponseMsg(data.msg);
@@ -81,7 +81,7 @@ function Galeria() {
       const url = `${process.env.REACT_APP_API_URL}/galeria/${imageId}`;
       const {data} = await axios.delete(url, 
         { headers: 
-            {Authorization: cookie.accessToken} 
+          { Authorization: `Bearer ${cookie.accessToken}` } 
         });
         setResponseMsg(data.msg);
     } catch (err) {

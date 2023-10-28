@@ -12,16 +12,17 @@ function DeliveryCostForm( { setNewDeliveryCost }) {
         cashOnDeliveryPrice: "",
         forwardPayingPrice: "",
     });
-    const [inputValue, setInputValue] = useState('');
 
   async function postDeliveryCost() {
     const url = `${process.env.REACT_APP_API_URL}/kiszallitas`;
     try {
         const {data} = await axios.post(url, 
             { deliveryCost },
-            { headers: { Authorization: cookie.accessToken }}
+            { headers: 
+              { Authorization: `Bearer ${cookie.accessToken}` }
+            }
         );
-        console.log(data);
+        //console.log(data);
         setNewDeliveryCost(data);
     } catch(err) {
         console.log(err);

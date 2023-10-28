@@ -95,25 +95,25 @@ function logout() {
 
 function getTokenFromHeaderOrSendErrorResponse() {
     $headers = getallheaders();
-    /* $isFound = preg_match(
+    $isFound = preg_match(
         '/Bearer\s(\S+)/',
         $headers['Authorization'] ?? '',
         $matches
-    ); */
+    );
     /* $isFound = preg_match(
         '/accessToken\s(\S+)/',
         $headers['Cookie'] ?? '',
         $matches
-    );
+    ); */
     if (!$isFound) {
         http_response_code(401);
         echo json_encode(['error' => 'unauthorized']);
         exit;
     }
-    return $matches[1]; */
+    return $matches[1];
     
     //return substr($headers['Authorization'], 12);
-    return $headers['Authorization'];
+    //return $headers['Authorization'];
 }
 
 function decodeJwtOrSendErrorResponse($token) {

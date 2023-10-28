@@ -17,7 +17,7 @@ function ProductList() {
     try {
         const url = `${process.env.REACT_APP_API_URL}/index.php`;
         const response = await axios.get(url, 
-            {headers: {Authorization: cookie.accessToken }});
+            { headers: { Authorization: `Bearer ${cookie.accessToken}` }});
         setProducts(response.data);
         setFilteredData(response.data);
     } catch (error) {
@@ -174,8 +174,8 @@ function ProductCard({ product, index }) {
     fetchThumbnail();
   }, [product.id_knives]);
 
-  const formatterIsAvailable = (availbale) => {
-    if (availbale === 1) return "Elérhető";
+  const formatterIsAvailable = (available) => {
+    if (Number(available) === 1) return "Elérhető";
     else return "Nem elérhető";
   }
 

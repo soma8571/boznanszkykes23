@@ -30,7 +30,7 @@ function Hirlevel() {
       const url = `${process.env.REACT_APP_API_URL}/hirlevel`;
       const {data} = await axios.post(url,
         { newsLetter },
-        { headers: { Authorization: cookie.accessToken }});
+        { headers: { Authorization: `Bearer ${cookie.accessToken}` } });
         setResponseMsg(data.msg);
         setIsSaveSuccess(true);
         //console.log(data.msg);

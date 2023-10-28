@@ -1,5 +1,6 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
+  CGIPassAuth On
 
   # Ha a public mappában lévő fájlra érkezett a kérés, szolgáld ki a fájlt
   RewriteCond %{REQUEST_URI} ^.*public/(.*)

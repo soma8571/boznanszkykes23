@@ -47,7 +47,9 @@ export function customerDataFormatter(field) {
         case "bill_details":
             return "Házszám (számlázási)";
         case "bill_name":
-            return "Számlázási név"; 
+            return "Számlázási név";
+        case "post_number":
+            return "Posta száma";
         default:
             return field;
     }
@@ -136,6 +138,23 @@ export function saleFieldFormatter(field) {
             return "Nem";
         case 1:
             return "Igen";
+        default:
+            return field;
+    }
+}
+
+export function deliveryFormatter(field) {
+    switch(field) {
+        case "home": 
+            return "Otthoni cím";
+        case "post":
+            return "Postán maradó";
+        case "post-point":
+            return "Postapont";
+        case "cashOnDelivery":
+            return "Utánvétes fizetés";
+        case "forwardPaying":
+            return "Előre utalás";
         default:
             return field;
     }

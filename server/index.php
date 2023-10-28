@@ -7,7 +7,7 @@ if ($_SERVER['SERVER_NAME'] === "localhost") {
     header("Access-Control-Allow-Origin: http://localhost:3000");
     $folder = "/boznanszkykes23/";
 } else {
-    header("Access-Control-Allow-Origin: http://admin.boznanszkykes.hu");
+    header("Access-Control-Allow-Origin: https://admin.boznanszkykes.hu");
     $folder = "/";
 }
 
@@ -85,12 +85,12 @@ $routeInfo = $dispatcher->dispatch($_SERVER['REQUEST_METHOD'], $path);
 switch ($routeInfo[0]) {
     case FastRoute\Dispatcher::NOT_FOUND:
         // ... 404 Not Found
-        home();
+        echo json_encode(["msg" => "Error. This route does not exists."]);
         break;
     case FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
         $allowedMethods = $routeInfo[1];
         // ... 405 Method Not Allowed
-        home();
+        echo json_encode(["msg" => "Error. This method not allowed."]);
         break;
     case FastRoute\Dispatcher::FOUND:
         $handler = $routeInfo[1];

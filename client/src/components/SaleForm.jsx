@@ -35,7 +35,7 @@ function SaleForm( { termekId }) {
             const url = `${process.env.REACT_APP_API_URL}/termekakcio/${termekId}`;
             const {data} = await axios.get(url, 
             { headers: 
-                {Authorization: cookie.accessToken} 
+                { Authorization: `Bearer ${cookie.accessToken}` } 
             });
             //console.log(data);
             setSale(data);
@@ -52,7 +52,7 @@ function SaleForm( { termekId }) {
             const {data} = await axios.post(url,
               { newSale },  
               { headers: 
-                  {Authorization: cookie.accessToken} 
+                { Authorization: `Bearer ${cookie.accessToken}` }
               });
             setResponseMsg(data.msg);
             //console.log(data);
@@ -67,7 +67,7 @@ function SaleForm( { termekId }) {
             const url = `${process.env.REACT_APP_API_URL}/termekakcio/${termekId}`;
             const {data} = await axios.delete(url,
               { headers: 
-                  {Authorization: cookie.accessToken} 
+                { Authorization: `Bearer ${cookie.accessToken}` }
               });
             setResponseMsg(data.msg);
             //console.log(data);

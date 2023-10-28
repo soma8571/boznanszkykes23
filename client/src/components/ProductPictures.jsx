@@ -30,7 +30,7 @@ function ProductPictures( {termekId} ) {
             const url = `${process.env.REACT_APP_API_URL}/termekkepek/${termekId}`;
             const {data} = await axios.get(url, 
                 { headers: 
-                    {Authorization: cookie.accessToken} 
+                    { Authorization: `Bearer ${cookie.accessToken}` }
                 });
             setImageUrls(data);
         } catch (err) {
@@ -45,7 +45,7 @@ function ProductPictures( {termekId} ) {
             const url = `${process.env.REACT_APP_API_URL}/termekkeptorlese/${imageId}`;
             const {data} = await axios.delete(url, 
                 { headers: 
-                    {Authorization: cookie.accessToken} 
+                    { Authorization: `Bearer ${cookie.accessToken}` } 
                 });
             setResponseMsg(data.msg);
         } catch (err) {
@@ -59,7 +59,7 @@ function ProductPictures( {termekId} ) {
             const {data} = await axios.patch(url, 
                 { productId }, 
                 { headers: 
-                    {Authorization: cookie.accessToken} 
+                    { Authorization: `Bearer ${cookie.accessToken}` } 
                 });
             setResponseMsg(data.msg);
         } catch (err) {

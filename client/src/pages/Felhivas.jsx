@@ -18,9 +18,7 @@ function Felhivas() {
       try {
         const url = `${process.env.REACT_APP_API_URL}/felhivas`;
         const res = await axios.get(url, {
-          headers: {
-            Authorization: cookies.accessToken 
-          }
+          headers: { Authorization: `Bearer ${cookies.accessToken}` } 
         });
         if (res.statusText === "OK") {
           if (Array.isArray(res.data) && res.data.length > 0) {
@@ -46,7 +44,7 @@ function Felhivas() {
     try {
       const url = `${process.env.REACT_APP_API_URL}/felhivas/${appealID}`;
       const {data} = await axios.delete(url, 
-        { headers: { Authorization: cookies.accessToken }}
+        { headers: { Authorization: `Bearer ${cookies.accessToken}` }}
       );
       setDeleteMsg(data);
     } catch(err) {

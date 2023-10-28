@@ -22,20 +22,16 @@ function Vasarlok() {
       try {
         const url = `${process.env.REACT_APP_API_URL}/vasarlok`;
         const res = await axios.get(url, {
-          headers: {
-            Authorization: cookies.accessToken 
-          }
+          headers: { Authorization: `Bearer ${cookies.accessToken}` }
         });
-        if (res.statusText === "OK") {
-          if (Array.isArray(res.data) && res.data.length > 0) {
-            const temp = [...res.data];
-            const x = temp.map(item => ( {key: item.id, label: item.name + " "+item.email}));
-            setData(x);
-          } else {
-            setError("Űgy tűnik jelenleg nincs megjeleníthető adat.");
-          }
-          setIsLoading(false);
+        if (Array.isArray(res.data) && res.data.length > 0) {
+          const temp = [...res.data];
+          const x = temp.map(item => ( {key: item.id, label: item.name + " "+item.email}));
+          setData(x);
+        } else {
+          setError("Űgy tűnik jelenleg nincs megjeleníthető adat.");
         }
+        setIsLoading(false);
       } catch(err) {
           setIsLoading(false);
           setError(err);
@@ -51,25 +47,22 @@ function Vasarlok() {
     try {
       const url = `${process.env.REACT_APP_API_URL}/vasarlo/${customer_id}`;
       const res = await axios.get(url, {
-        headers: {
-          Authorization: cookies.accessToken 
-        }
+        headers: { Authorization: `Bearer ${cookies.accessToken}` }
       });
-      if (res.statusText === "OK") {
-        if (Array.isArray(res.data) && res.data.length > 0) {
-          /*
-          Egy tömböt kapunk, melynek 0. elemének 0. eleme a vásárlói alapadatokat tartalmazó objektum
-          */
-          setCustomerData({...res.data[0][0]});
-          //A tömb 1. eleme pedig egy másik tömb, ami az adott vásárló korábbi rendeléseit tartalmazza, amennyiben volt(ak)
-          if (res.data[1].length > 0) {
-            setCustomerOrders(res.data[1]);
-          }
-        } else {
-          setError("Űgy tűnik jelenleg nincs megjeleníthető adat.");
+      if (Array.isArray(res.data) && res.data.length > 0) {
+        /*
+        Egy tömböt kapunk, melynek 0. elemének 0. eleme a vásárlói alapadatokat tartalmazó objektum
+        */
+        setCustomerData({...res.data[0][0]});
+        //A tömb 1. eleme pedig egy másik tömb, ami az adott vásárló korábbi rendeléseit tartalmazza, amennyiben volt(ak)
+        if (res.data[1].length > 0) {
+          setCustomerOrders(res.data[1]);
         }
-        setIsLoading(false);
+      } else {
+        console.log(res.data);
+        setError("Űgy tűnik jelenleg nincs megjeleníthető adat.");
       }
+      setIsLoading(false);
     } catch(err) {
         setIsLoading(false);
         setError(err);

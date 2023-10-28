@@ -18,7 +18,7 @@ function AppealForm( {setNewAppeal} ) {
     try {
         const {data} = await axios.post(url, 
             { appeal },
-            { headers: { Authorization: cookie.accessToken }}
+            { headers: { Authorization: `Bearer ${cookie.accessToken}` }}
         );
         //console.log(data);
         setNewAppeal(data);

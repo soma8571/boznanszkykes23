@@ -3,9 +3,10 @@
 function vasarlok() {
     auth();
     $pdo = getConnection();
-    $query = "SELECT name, email, id_customers AS id 
+    $query = "SELECT email, MAX(name) AS name, MAX(id_customers) AS id 
                 FROM customers 
-                ORDER BY name ASC";
+                GROUP BY email 
+                ORDER BY id DESC";
     $statement = $pdo->prepare($query);
     $statement->execute();
     $data = $statement->fetchAll(PDO::FETCH_ASSOC);
@@ -15,7 +16,7 @@ function vasarlok() {
 function vasarloAdatok($vars) {
     auth();
     $pdo = getConnection();
-    $query = "SELECT email, phone, pa.post_code, pa.settlement, pa.street, pa. details, ba.post_code AS bill_post_code, ba.settlement AS bill_settlement, ba.street AS bill_street, ba.details AS bill_details, ba.bill_name
+    $query = "SELECT email, phone, pa.post_code, pa.settlement, pa.street, pa.post_number, ba.post_code AS bill_post_code, ba.settlement AS bill_settlement, ba.street AS bill_street, ba.details AS bill_details, ba.bill_name
                 FROM customers c
                     LEFT JOIN post_addresses pa ON c.   post_addresses_idpost_addresses = pa.id_post_addresses
                     LEFT JOIN bill_addresses ba ON c.bill_addresses_idbill_addresses = ba.id_bill_addresses

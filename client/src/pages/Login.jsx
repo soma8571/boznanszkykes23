@@ -30,16 +30,13 @@ const Login = ( { handleLogin } ) => {
                 url, 
                 { username, password }
             );
-                
-            
-            if (response.statusText === "OK") {
-                let accessToken = response.data.accessToken;
-                setCookies("accessToken", accessToken, { path: "/" });
-                handleLogin(true);
-                navigate("/");
-            } 
-
+            //console.log(response);
+            let accessToken = response.data.accessToken;
+            setCookies("accessToken", accessToken, { path: "/" });
+            handleLogin(true);
+            navigate("/");
         } catch (err) {
+            //console.log(err);
             if (err.response?.status === 401)
                 setError("Hibás bejelentkezési adatok!");
             else

@@ -23,7 +23,7 @@ function Main() {
         const url = `${process.env.REACT_APP_API_URL}/index.php`;
         const res = await axios.get(url, 
           { headers: 
-            {Authorization: cookies.accessToken} 
+            {Authorization: `Bearer ${cookies.accessToken}`}
           });
 
         if (res.statusText === "OK") {

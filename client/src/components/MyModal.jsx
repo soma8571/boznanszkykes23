@@ -7,7 +7,7 @@ import {
   Button,
   Table
 } from "reactstrap";
-import {priceFormatter} from '../utils/utils.js';
+import {priceFormatter, deliveryFormatter} from '../utils/utils.js';
 import axios from "axios";
 import { useCookies } from "react-cookie";
 
@@ -30,7 +30,7 @@ function MyModal({ isOpen, toggle, orderData }) {
   }
 
   function renderCustomerInfo() {
-    let postAddress = `${customerInfo["post_code"]} ${customerInfo["settlement"]}, ${customerInfo["street"]} ${customerInfo["details"]}`;
+    let postAddress = `${customerInfo["post_code"]} ${customerInfo["settlement"]}, ${customerInfo["street"]}`;
     
     let billAddress = "";
     if (customerInfo["bill_post_code"] && customerInfo["bill_settlement"]) {
@@ -49,9 +49,18 @@ function MyModal({ isOpen, toggle, orderData }) {
       <tr key={customerInfo["phone"]}>
         <td>Telefon</td><td>{customerInfo["phone"]}</td>
       </tr>
-      <tr key={customerInfo["postAddress"]}>
-        <td>Postai cím</td><td>{postAddress}</td>
+      <tr key="delivery_type">
+        <td>Kiszállítás típusa</td><td>{deliveryFormatter(orderInfo[0]["delivery_type"])}</td>
       </tr>
+      <tr key="post_number">
+        <td>Kiszállítási cím</td><td>{postAddress}</td>
+      </tr>
+      {orderInfo[0]["delivery_type"] !== "home" && (
+        <tr key={customerInfo["postAddress"]}>
+          <td>Posta vagy postapont száma</td>
+          <td>{customerInfo["post_number"]}</td>
+      </tr>
+      )}
       <tr key="billname">
         <td>Számlázási név</td><td>{customerInfo["bill_name"] ? customerInfo["bill_name"] : "postaival azonos"}</td>
       </tr>
@@ -98,12 +107,24 @@ function MyModal({ isOpen, toggle, orderData }) {
           <td colSpan={1}>{priceFormatter(sum)}</td>
         </tr>
         <tr>
+          <td colSpan={5}>Kiszállítás díja:</td>
+          <td colSpan={1}>{priceFormatter(orderInfo[0]["delivery_cost"])}</td>
+        </tr>
+        <tr>
+          <td colSpan={5}>Összes fizetendő:</td>
+          <td colSpan={1}>{priceFormatter(calculateTotal(sum, orderInfo[0]["delivery_cost"]))}</td>
+        </tr>
+        <tr>
+          <td colSpan={5}>Fizetési mód:</td>
+          <td colSpan={1}>{deliveryFormatter(orderInfo[0]["payment_method"])}</td>
+        </tr>
+        <tr>
           <td>Rendelés dátuma:</td>
           <td colSpan={5}>{orderInfo[0]["date"]}</td>
         </tr>
         <tr>
           <td>Vásárlói megjegyzés:</td>
-          <td colSpan={5}>{orderInfo[0]["comment"]}</td>
+          <td colSpan={5}>{orderInfo[0]["customer_comment"]}</td>
         </tr>
         <tr>
           <td>Rendelés státusza:</td>
@@ -122,6 +143,10 @@ function MyModal({ isOpen, toggle, orderData }) {
       )
       rows.push(staticRows);
       return <tbody>{rows}</tbody>;
+    }
+
+    function calculateTotal(a, b) {
+      return Number(a) + Number(b);
     }
 
     const orderStates = [
@@ -150,7 +175,7 @@ function MyModal({ isOpen, toggle, orderData }) {
         const url = `${process.env.REACT_APP_API_URL}/kiszallitas/${deliveryId}`;
         const {data} = await axios.patch(url, 
           { status },
-          { headers: { Authorization: cookies.accessToken }});
+          { headers: { Authorization: `Bearer ${cookies.accessToken}` }});
           setUpdateMsg(data.msg);
       } catch(err) {
         console.log(err);

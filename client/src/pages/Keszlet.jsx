@@ -16,17 +16,13 @@ function Keszlet() {
       try {
         const url = `${process.env.REACT_APP_API_URL}/keszlet`;
         const res = await axios.get(url, {
-          headers: {
-            Authorization: cookies.accessToken 
-          }
+          headers: { Authorization: `Bearer ${cookies.accessToken}` }
         });
-        if (res.statusText === "OK") {
-          if (Array.isArray(res.data) && res.data.length > 0) {
-            setData(res.data);
-          } else {
-            setError("Űgy tűnik jelenleg nincs megjeleníthető adat.");
-          }     
-        }
+        if (Array.isArray(res.data) && res.data.length > 0) {
+          setData(res.data);
+        } else {
+          setError("Űgy tűnik jelenleg nincs megjeleníthető adat.");
+        }     
       } catch(err) {
         console.log(err);
       } finally {
