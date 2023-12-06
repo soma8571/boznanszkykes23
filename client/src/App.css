@@ -247,6 +247,46 @@ div.newsletterForm {
   color: red;
 }
 
+.sale-info {
+  display: grid;
+  font-size: .9rem;
+}
+
+.sale-perc {
+  background-color: crimson;
+  width: fit-content;
+  padding: .2rem .5rem;
+}
+
+.availables-filter {
+  margin: 1rem;
+}
+
+.availables-filter label {
+  margin-left: .5rem;
+}
+
+.sending-info {
+  margin: 1rem;
+}
+
+.in-stock, 
+.available {
+  color: greenyellow;
+  font-size: .9rem;
+}
+
+.no-stock,
+.non-available {
+  color: red;
+  font-size: .9rem;
+}
+
+.product-name-link {
+  font-size: 1.3rem;
+  color: white;
+}
+
 @media screen and (max-width: 700px) {
   
   .loginWrapper {

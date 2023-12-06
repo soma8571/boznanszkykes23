@@ -10,6 +10,8 @@ require __DIR__."/hirlevel.php";
 require __DIR__."/galeria.php";
 require __DIR__."/autentikacio.php";
 require __DIR__."/termek.php";
+require __DIR__."/phpmailer.php";
+require __DIR__."/smarty.php";
 
 function generateRandomString($length = 21) {
 	$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';

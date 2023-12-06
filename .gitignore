@@ -6,3 +6,6 @@ server/vendor
 server/assets
 server/teszt.php
 server/.htaccess
+server/smarty/cache
+server/smarty/compile
+server/smarty/config

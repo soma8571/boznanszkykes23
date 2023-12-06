@@ -18,6 +18,8 @@ function Hirlevel() {
   const [responseMsg, setResponseMsg] = useState("");
   const [isSaveSuccess, setIsSaveSuccess] = useState(false);
   const [cookie] = useCookies(["accessToken"]);
+  const [isSending, setIsSending] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     if (isSaveSuccess) {
@@ -25,7 +27,13 @@ function Hirlevel() {
     }
   }, [isSaveSuccess]);
 
+  /* useEffect(()=>{
+    console.log(newsLetter);
+  }, [newsLetter]); */
+
   async function postNewsletter() {
+    setIsSending(true);
+    setError("");
     try {
       const url = `${process.env.REACT_APP_API_URL}/hirlevel`;
       const {data} = await axios.post(url,
@@ -33,9 +41,13 @@ function Hirlevel() {
         { headers: { Authorization: `Bearer ${cookie.accessToken}` } });
         setResponseMsg(data.msg);
         setIsSaveSuccess(true);
-        //console.log(data.msg);
+        console.log(data);
     } catch (err) {
-        console.log(err);
+        //console.log(err);
+        let errorMsg = err?.response?.data?.msg ?? err.message;
+        setError(errorMsg);
+    } finally {
+      setIsSending(false);
     }
   }
 
@@ -87,6 +99,7 @@ function Hirlevel() {
         >
         </Input> 
       </FormGroup>
+
       <FormGroup>
         <Label for="sendDate">Kiküldés dátuma:</Label>
         <Input
@@ -100,8 +113,11 @@ function Hirlevel() {
           required
         />
       </FormGroup>
-      <Button>Mentés</Button>
+      <Button>Küldés</Button>
      </Form>
+     <div className="error">
+      {error !== "" && error}
+     </div>
     </div>
   );
 }

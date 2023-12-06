@@ -205,7 +205,7 @@ function termekAkcioMentese($vars, $body) {
     $insert = "INSERT INTO on_sale (deadline, sale_percentage, active, product_id, until_in_stock) VALUES (?, ?, ?, ?, ?)"; 
     $statement = $pdo->prepare($insert);
     $statement->execute([
-        $body["newSale"]["deadline"],
+        $body["newSale"]["deadline"] . " 23:59:59",
         (int)$body["newSale"]["sale_percentage"],
         (int)$body["newSale"]["active"],
         (int)$vars['id'],

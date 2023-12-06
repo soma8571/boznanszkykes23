@@ -105,13 +105,18 @@ function home() {
     //Termékek listája
     auth();
     $pdo = getConnection();
-    $query = "SELECT id_knives, name, k.type, k.available, subcategory_name, price, pi.thumbnail_path
+    $query = "SELECT DISTINCT id_knives, name, k.type, k.available, subcategory_name, price, pi.thumbnail_path, os.*, st.stock
                 FROM knives k 
                     LEFT JOIN knives_subcategories ks
                         ON k.type_subcategory = ks.idknives_subcategories
                     LEFT JOIN product_images pi
                         ON k.id_knives = pi.knives_id
-                WHERE pi.profil = 1 OR pi.profil IS NULL";
+                    LEFT JOIN on_sale os
+                        ON k.id_knives = os.product_id
+                    LEFT JOIN store st
+                        ON k.id_knives = st.product_id
+                WHERE pi.profil = 1 OR pi.profil IS NULL
+                ORDER BY sale_percentage DESC, available DESC, stock DESC";
     $statement = $pdo->prepare($query);
     $statement->execute();
     $data = $statement->fetchAll(PDO::FETCH_ASSOC);

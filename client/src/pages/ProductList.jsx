@@ -11,6 +11,7 @@ function ProductList() {
   const [isLoading, setIsLoading] = useState(false);
   const [category, setCategory] = useState(["penknife", "dagger", "kitchen_knife"]);
   const [cookie] = useCookies(["accessToken"]);
+  const [onlyShowAvailables, setOnlyShowAvailables] = useState(false);
 
   async function fetchProductData() {
     setIsLoading(true);
@@ -18,6 +19,7 @@ function ProductList() {
         const url = `${process.env.REACT_APP_API_URL}/index.php`;
         const response = await axios.get(url, 
             { headers: { Authorization: `Bearer ${cookie.accessToken}` }});
+        console.log(response.data);  
         setProducts(response.data);
         setFilteredData(response.data);
     } catch (error) {
@@ -33,12 +35,22 @@ function ProductList() {
 
   useEffect(() => {
     catFilter();
-  }, [category]);
+  }, [category, onlyShowAvailables]);
 
   const handleChange = (e) => {
     const {value} = e.target;
+    let filtered = [];
     if (value.length > 2) {
-      const filtered = products.filter(item => item.name.toLowerCase().includes(value));
+      if (onlyShowAvailables) {
+        filtered = products.filter(item => 
+          item.name.toLowerCase().includes(value) && 
+          (item.available === 1 || item.available === "1")
+        );
+      } else {
+        filtered = products.filter(item => 
+          item.name.toLowerCase().includes(value)
+        );
+      }
       setFilteredData(filtered);
     } else {
       setFilteredData(products);
@@ -57,7 +69,16 @@ function ProductList() {
   }
 
   const catFilter = () => {
-    const catFiltered = products.filter(item => category.includes(item.type));
+    let catFiltered = [];
+    if (onlyShowAvailables) {
+      catFiltered = products.filter(item => 
+        category.includes(item.type) && 
+          (item.available === 1 || item.available === "1")
+      );
+    } else {
+      catFiltered = products.filter(item => 
+        category.includes(item.type));
+    }
     //console.log(catFiltered);
     setFilteredData(catFiltered);
   }
@@ -74,6 +95,10 @@ function ProductList() {
       </tr>
     </thead>;
     return heading;
+  }
+
+  const handleAvailableChange = (e) => {
+    setOnlyShowAvailables(prev => !prev);
   }
 
   return (
@@ -141,6 +166,16 @@ function ProductList() {
                 Tőr
                 </Button>
             </ButtonGroup>
+            <div className="availables-filter">
+              <input 
+                type="checkbox" 
+                name="available-switch" 
+                id="av-switch"
+                checked={onlyShowAvailables}
+                onChange={e=>handleAvailableChange(e)} 
+              />
+              <label htmlFor="av-switch">Csak az elérhetőek mutatása</label>
+            </div>
             </div>
             </>)
         }
@@ -175,8 +210,9 @@ function ProductCard({ product, index }) {
   }, [product.id_knives]);
 
   const formatterIsAvailable = (available) => {
-    if (Number(available) === 1) return "Elérhető";
-    else return "Nem elérhető";
+    if (Number(available) === 1) 
+      return <div className="available">Elérhető</div>;
+    return <div className="non-available">Nem elérhető</div>;
   }
 
   function renderThumbnail() {
@@ -187,12 +223,37 @@ function ProductCard({ product, index }) {
     }
   }
 
+  function renderSaleInfo(perc, deadline, untilInStock) {
+    const saleInfo = 
+      <div className="sale-info">
+        <div className="sale-perc">{perc}% kedvezmény</div>
+        <div className="sale-deadline">{deadline} -ig</div>
+        <div className="sale-until-in-stock">
+          Készlet erejéig: {untilInStock === 1 ? "Igen" : "Nem"}
+        </div>
+        
+      </div>
+    return saleInfo;
+  }
+
+  function renderStockInfo(stock) {
+    if ((Number(stock)) > 0) {
+      let stockInfo = <div className="in-stock">Készleten: {stock} db</div>;
+      return stockInfo;
+    }
+    return <div className="no-stock">Nincs készleten</div>;
+    
+  }
+
   return (
     <tr>
         <td>{index+1}</td>
         <td>{renderThumbnail()}</td>
-        <td><Link to={`/termek/${product.id_knives}`}>{product.name}</Link> <br />
+        <td><Link to={`/termek/${product.id_knives}`} className="product-name-link">{product.name}</Link> <br />
             {formatterIsAvailable(product.available)}
+            {product.sale_percentage && 
+              renderSaleInfo(product.sale_percentage, product.deadline, product.until_in_stock)}
+            {renderStockInfo(product.stock)}
         </td>
         <td>{knifeTypeFormatter(product.type)}</td>
         <td>{knifeTypeFormatter(product.subcategory_name)}</td>
