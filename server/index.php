@@ -76,6 +76,9 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) u
     $r->addRoute('GET', $folder.'server/galeria', 'galeriaKepek');
     $r->addRoute('PATCH', $folder.'server/galeria/{id}', 'lathatosagModositas');
     $r->addRoute('DELETE', $folder.'server/galeria/{id}', 'galeriaKepTorlese');
+
+    //CRON : más megoldás lett
+    //$r->addRoute('GET', $folder.'server/cron/hirlevel', 'checkUnsentMails');
    
 });
 

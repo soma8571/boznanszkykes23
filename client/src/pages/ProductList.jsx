@@ -9,7 +9,11 @@ function ProductList() {
   const [products, setProducts] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [category, setCategory] = useState(["penknife", "dagger", "kitchen_knife"]);
+  const [category, setCategory] = useState([
+    "penknife", 
+    "dagger", 
+    "kitchen_knife"
+  ]);
   const [cookie] = useCookies(["accessToken"]);
   const [onlyShowAvailables, setOnlyShowAvailables] = useState(false);
 
@@ -19,7 +23,7 @@ function ProductList() {
         const url = `${process.env.REACT_APP_API_URL}/index.php`;
         const response = await axios.get(url, 
             { headers: { Authorization: `Bearer ${cookie.accessToken}` }});
-        console.log(response.data);  
+        //console.log(response.data);  
         setProducts(response.data);
         setFilteredData(response.data);
     } catch (error) {

@@ -1,12 +1,16 @@
 <?php
+
+/* A mediacenter szerverén ez a 'admin2023/cron/' mappában van és a cron működéshez szükséges csak */
+
+//Load Composer's autoloader
+//require 'vendor/autoload.php';
+
 //Import PHPMailer classes into the global namespace
 //These must be at the top of your script, not inside a function
 use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
+//use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
-//Load Composer's autoloader
-require 'vendor/autoload.php';
 
 function sendMail($to, $subject, $body, $cc = null) {
 

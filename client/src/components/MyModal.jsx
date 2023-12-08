@@ -101,35 +101,49 @@ function MyModal({ isOpen, toggle, orderData }) {
         sum += orderInfo[i]["quantity"] * orderInfo[i]["price"];
         rows.push(row);
       }
-      let staticRows = (<>
-        <tr>
-          <td colSpan={5}>Rendelés összértéke:</td>
-          <td colSpan={1}>{priceFormatter(sum)}</td>
-        </tr>
-        <tr>
-          <td colSpan={5}>Kiszállítás díja:</td>
-          <td colSpan={1}>{priceFormatter(orderInfo[0]["delivery_cost"])}</td>
-        </tr>
-        <tr>
-          <td colSpan={5}>Összes fizetendő:</td>
-          <td colSpan={1}>{priceFormatter(calculateTotal(sum, orderInfo[0]["delivery_cost"]))}</td>
-        </tr>
-        <tr>
-          <td colSpan={5}>Fizetési mód:</td>
-          <td colSpan={1}>{deliveryFormatter(orderInfo[0]["payment_method"])}</td>
-        </tr>
-        <tr>
-          <td>Rendelés dátuma:</td>
-          <td colSpan={5}>{orderInfo[0]["date"]}</td>
-        </tr>
-        <tr>
-          <td>Vásárlói megjegyzés:</td>
-          <td colSpan={5}>{orderInfo[0]["customer_comment"]}</td>
-        </tr>
-        <tr>
-          <td>Rendelés státusza:</td>
-          <td colSpan={1}>
+      
+      let row1 = 
+          <tr key={"1st"}>
+            <td key={"1-1st"} colSpan={5}>Rendelés összértéke:</td>
+            <td key={"1-2nd"} colSpan={1}>{priceFormatter(sum)}</td>
+          </tr>;
+      let row2 = 
+        <tr key={"2nd"}>
+          <td key={"2-1st"} colSpan={5}>Kiszállítás díja:</td>
+          <td key={"2-2nd"} colSpan={1}>
+            {priceFormatter(orderInfo[0]["delivery_cost"])}
+          </td>
+        </tr>;
+      let row3 =
+        <tr key={"3rd"}>
+          <td key={"3-1st"} colSpan={5}>Összes fizetendő:</td>
+          <td key={"3-2nd"} colSpan={1}>
+            {priceFormatter(calculateTotal(sum, orderInfo[0]["delivery_cost"]))}
+          </td>
+        </tr>;
+      let row4 = 
+        <tr key={"4th"}>
+          <td key={"4-1st"} colSpan={5}>Fizetési mód:</td>
+          <td key={"4-2nd"} colSpan={1}>
+            {deliveryFormatter(orderInfo[0]["payment_method"])}
+          </td>
+        </tr>;
+      let row5 =
+        <tr key={"5th"}>
+          <td key={"5-1st"}>Rendelés dátuma:</td>
+          <td key={"5-2nd"} colSpan={5}>{orderInfo[0]["date"]}</td>
+        </tr>;
+      let row6 =
+        <tr key={"6th"}>
+          <td key={"6-1st"}>Vásárlói megjegyzés:</td>
+          <td key={"6-2nd"} colSpan={5}>{orderInfo[0]["customer_comment"]}</td>
+        </tr>;
+      let row7 =
+        <tr key={"7th"}>
+          <td key={"7-1st"}>Rendelés státusza:</td>
+          <td key={"7-2nd"} colSpan={1}>
             <select 
+              key={"select-01"}
               style={{ backgroundColor: "#cedc00", padding: "0.5rem 1rem"}}
               name="orderStatus"
               data-id={orderInfo[0]["id_deliveries"]}
@@ -138,11 +152,10 @@ function MyModal({ isOpen, toggle, orderData }) {
                 {renderStateOptions(orderInfo[0]["status"])}
             </select>
           </td>
-          <td colSpan={4}></td>
-        </tr></>
-      )
-      rows.push(staticRows);
-      return <tbody>{rows}</tbody>;
+          <td key={"7-3rd"} colSpan={4}></td>
+        </tr>;
+      rows.push(row1, row2, row3, row4, row5, row6, row7);
+      return <tbody key={"tb-01"}>{rows}</tbody>;
     }
 
     function calculateTotal(a, b) {
@@ -157,7 +170,11 @@ function MyModal({ isOpen, toggle, orderData }) {
 
     function renderStateOptions(status) {
       const options = orderStates.map((option, ind) => 
-        <option value={option.value} key={ind} selected={option.value === status}>
+        <option 
+          value={option.value} 
+          key={ind} 
+          /* selected={option.value === status} */
+        >
           {option.label}
         </option>);
       return options;

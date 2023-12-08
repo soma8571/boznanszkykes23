@@ -42,8 +42,8 @@ function Megrendelesek() {
         setData(res.data);
         //console.log(res.data);
       } else {
-        console.log(res.data);
-        setError("Űgy tűnik jelenleg nincs megjeleníthető adat.");
+        //console.log(res.data);
+        setError("Űgy tűnik jelenleg nincs megrendelés a rendszerben.");
       }
       setIsLoading(false);
     } catch (err) {
@@ -65,7 +65,7 @@ function Megrendelesek() {
         setDeliveryData(res.data);
         //console.log(res.data);
       } else {
-        console.log(res);
+        //console.log(res);
         setError("Űgy tűnik jelenleg nincs megjeleníthető adat.");
       }
     } catch (err) {
@@ -120,54 +120,49 @@ function Megrendelesek() {
     return <tbody>{rows}</tbody>;
   };
 
-
-  if (error !== "") {
-    return <p className="errormsg">{error}</p>;
-  }
-
   return (
     <div>
       <h1>Megrendelések</h1>
 
       <div className="flex-container">
-        {isLoading ? (
-          <Spinner>Loading...</Spinner>
-        ) : (
-          <>
-            <div className="content">
-              {data && data.length > 0 ? (
-                <>
-                  <FormGroup switch style={{ margin: "1.5rem 0" }}>
-                    <Input
-                      type="switch"
-                      checked={showCompleted}
-                      onChange={() => {setShowCompleted(!showCompleted)}}
-                    />
-                  <Label check>Mutasd az utolsó 20 teljesült rendelést is</Label>
-                  </FormGroup>
-                  <Table dark hover striped className="mytable">
-                    {renderTableHeadingJSX()}
-                    {renderTableData()}
-                  </Table>
-                </>
-              ) : (
-                <p>Nincs adatunk</p>
-              )}
-            </div>
-
-            {/* <div className="sidebar">
-            </div> */}
-          </>
+        {isLoading ? 
+          (
+            <Spinner>Loading...</Spinner>
+          ) 
+          : 
+          (<div className="content">
+            {data && data.length > 0 ? 
+              (<>
+                <FormGroup switch style={{ margin: "1.5rem 0" }}>
+                  <Input
+                    type="switch"
+                    checked={showCompleted}
+                    onChange={() => {setShowCompleted(!showCompleted)}}
+                  />
+                <Label check>Mutasd az utolsó 20 teljesült rendelést is</Label>
+                </FormGroup>
+                <Table dark hover striped className="mytable">
+                  {renderTableHeadingJSX()}
+                  {renderTableData()}
+                </Table>
+              </>
+              ) 
+              :
+              (error !== "" &&
+                <p className="errormsg">{error}</p>
+              )
+            }
+          </div>)
+        }
+        </div>
+        {modal && (
+          <MyModal 
+            isOpen={modal} 
+            toggle={toggle} 
+            orderData={deliveryData} 
+          />
         )}
       </div>
-      {modal && (
-        <MyModal 
-          isOpen={modal} 
-          toggle={toggle} 
-          orderData={deliveryData} 
-        />
-      )}
-    </div>
   );
 }
 
