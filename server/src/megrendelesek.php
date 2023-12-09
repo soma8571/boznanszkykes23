@@ -12,6 +12,7 @@ function megrendelesek() {
                     INNER JOIN customers c
                         ON o.customers_id_customers = c.id_customers
                     WHERE d.status = 'PENDING'
+                    GROUP BY d.id_deliveries
                     ORDER BY o.date ASC";
     $statement = $pdo->prepare($query);
     $statement->execute();
