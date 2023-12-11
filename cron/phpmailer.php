@@ -18,13 +18,16 @@ function sendMail($to, $subject, $body, $cc = null) {
 
     try {
         $mail->isSMTP();
-        $mail->Host = "pop3.mediacenter.hu";
+        //$mail->Host = "pop3.mediacenter.hu";
+        $mail->Host = "smtp.mediacenter.hu"; //dedikált SMTP beállítás
         $mail->Port = 465;
         $mail->SMTPAuth = true;
         $mail->SMTPSecure = "ssl";
         $mail->CharSet = "UTF-8";
-        $mail->Username = "noreply@boznanszkykes.hu";
-        $mail->Password = "Benedek2012";
+        //$mail->Username = "noreply@boznanszkykes.hu";
+        $mail->Username = "boznanszkykes"; //dedikált SMTP beállítás
+        //$mail->Password = "Benedek2012";
+        $mail->Password = "D6RdmPzs"; //dedikált SMTP beállítás
         $mail->setFrom("noreply@boznanszkykes.hu", "boznanszkykes.hu");
 
         $mail->addAddress($to);
