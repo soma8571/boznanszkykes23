@@ -104,6 +104,15 @@ function Header() {
                       </NavLink>
                     </NavItem>
                   </DropdownItem>
+                  <DropdownItem>
+                    <NavItem>
+                      <NavLink 
+                        href="/alkategoriak/"
+                        style={{color: "black"}}>
+                          Alkategóriák
+                      </NavLink>
+                    </NavItem>
+                  </DropdownItem>
                 </DropdownMenu>
               </UncontrolledDropdown>
             </Nav>

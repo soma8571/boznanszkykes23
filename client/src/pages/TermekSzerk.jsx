@@ -120,14 +120,17 @@ export default function TermekSzerk() {
     }
 
     const renderSubCatOptions = () => {
-        const options = productSubCats.map(item => 
+        const options = [];
+        const empty = <option value=""></option>;
+        options.push(empty);
+        const genericOptions = productSubCats.map(item => 
             <option 
                 value={item.idknives_subcategories}
                 key={item.idknives_subcategories}
             >
             {item.subcategory_name}
             </option>);
-        options.push(<option key="empty" value={null}></option>);
+        options.push(genericOptions);
         return options;
     }
 

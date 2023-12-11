@@ -76,6 +76,15 @@ h3 {
   padding: 2rem;
 }
 
+.flex-container-col-v2 {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  padding: 1rem;
+}
+
 div.gallery-container {
   display: flex;
   flex-direction: column;
@@ -312,6 +321,28 @@ div.newsletterForm {
   color: var(--am-l-green);
 }
 
+.subcats-wrapper {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+.subcat {
+  font-size: 1.1rem;
+  color: #cedc00;
+}
+
+.new-subcat {
+  max-width: fit-content;
+}
+
+.delete-icon {
+  color: crimson;
+}
+
+.delete-icon:hover {
+  cursor: pointer;
+}
 
 @media screen and (max-width: 700px) {
   

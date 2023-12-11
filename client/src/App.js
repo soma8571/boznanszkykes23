@@ -16,6 +16,7 @@ import Layout from './components/Layout';
 import TermekSzerk from './pages/TermekSzerk';
 import UjTermek from './pages/UjTermek';
 import ProductList from './pages/ProductList';
+import Alkategoriak from './pages/Alkategoriak';
 
 function App() {
   
@@ -85,6 +86,10 @@ function App() {
 
         <Route path="/kiszallitas/" 
           element={<Layout content={<Kiszallitas />} />}>
+        </Route>
+
+        <Route path="/alkategoriak/" 
+          element={<Layout content={<Alkategoriak />} />}>
         </Route>
 
       </Routes>

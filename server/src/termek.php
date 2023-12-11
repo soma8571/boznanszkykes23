@@ -3,7 +3,9 @@
 function termekalkategoriak() {
     auth();
     $pdo = getConnection();
-    $query = "SELECT * FROM knives_subcategories"; 
+    $query = "SELECT * 
+                FROM knives_subcategories
+                ORDER BY subcategory_name ASC"; 
     $statement = $pdo->prepare($query);
     $statement->execute();
     $data = $statement->fetchAll(PDO::FETCH_ASSOC);
@@ -425,6 +427,55 @@ function termekProfilModositas($vars, $body) {
         echo json_encode(["msg" => "A profilkép sikeresen módosításra került."]);
     else
         echo json_encode(["msg" => "Nem történt módosítás a profilképben."]);
+}
+
+function getSubcats() {
+    auth();
+    $pdo = getConnection();
+    $query = "SELECT * 
+                FROM knives_subcategories
+                ORDER BY subcategory_name ASC";
+    $statement = $pdo->prepare($query);
+    $statement->execute([]);
+    if ($statement->rowCount() > 0) {
+        $data = $statement->fetchAll(PDO::FETCH_ASSOC);
+        echo json_encode($data);
+        return;
+    }
+    http_response_code(404);
+    echo json_encode(["msg" => "Nincsenek alkategóriák."]);
+}
+
+function newSubcat($vars, $body) {
+    auth();
+    $pdo = getConnection();
+    $insert = "INSERT INTO knives_subcategories (subcategory_name, type)
+                VALUES(?, ?)";
+    $statement = $pdo->prepare($insert);
+    $statement->execute([
+        $body["newSubCat"]["subcategory_name"],
+        $body["newSubCat"]["type"]
+    ]);
+    if ($pdo->lastInsertId()) {
+        echo json_encode(["msg" => "Az új kategória rögzítése sikeres volt."]);
+        return;
+    }
+    http_response_code(404);
+}
+
+function deleteSubcat($vars) {
+    auth();
+    $pdo = getConnection();
+    $delete = "DELETE FROM knives_subcategories 
+                WHERE idknives_subcategories = ?";
+    $statement = $pdo->prepare($delete);
+    $statement->execute([$vars['id']]);
+    if ($statement->rowCount() > 0) {
+        echo json_encode(["msg" => "Az alkategória törlése sikeres volt."]);
+        return;
+    }
+    http_response_code(404);
+    echo json_encode(["msg" => "Nem történt törlés."]);
 }
 
 ?>

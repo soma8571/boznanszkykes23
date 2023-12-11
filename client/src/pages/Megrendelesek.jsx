@@ -43,7 +43,7 @@ function Megrendelesek() {
         //console.log(res.data);
       } else {
         //console.log(res.data);
-        setError("Űgy tűnik jelenleg nincs megrendelés a rendszerben.");
+        setError("Úgy tűnik jelenleg nincs megrendelés a rendszerben.");
       }
       setIsLoading(false);
     } catch (err) {

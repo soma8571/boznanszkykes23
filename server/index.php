@@ -47,6 +47,11 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) u
     //Termék Profilkép megváltoztatása
     $r->addRoute('PATCH', $folder.'server/termekprofilmodositas/{id}', 'termekProfilModositas');
 
+    //Alkategóriák lekérése (termek.php)
+    $r->addRoute('GET', $folder.'server/alkategoriak', 'getSubcats');
+    $r->addRoute('POST', $folder.'server/uj-alkategoria', 'newSubcat');
+    $r->addRoute('DELETE', $folder.'server/alkategoria-torles/{id}', 'deleteSubcat');
+
     //megrendelesek.php
     $r->addRoute('GET', $folder.'server/megrendelesek', 'megrendelesek');
     $r->addRoute('GET', $folder.'server/megrendeles/{id}', 'megrendelesAdatok');
