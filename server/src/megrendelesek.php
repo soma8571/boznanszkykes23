@@ -45,7 +45,7 @@ function megrendelesek() {
 function megrendelesAdatok($vars) {
     auth();
     $pdo = getConnection();
-    $query = "SELECT k.name AS kname, k.blade_material, k.description, o.price, o.quantity, o.date, o.comment, d.*
+    $query = "SELECT k.name AS kname, k.blade_material, k.description, o.price, o.quantity, o.date, o.comment, o.from_store_quantity, d.*
                 FROM orders o
                     INNER JOIN knives k ON o.knives_id_knives = k.id_knives  
                     INNER JOIN deliveries d ON o.deliveries_id_deliveries = d.id_deliveries
@@ -54,7 +54,7 @@ function megrendelesAdatok($vars) {
     $statement->execute([$vars['id']]);
     $order_data = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-    $query = "SELECT DISTINCT c.name AS cname, c.phone, c.email, pa.post_code, pa.settlement, pa.street, pa.post_number, ba.post_code AS bill_post_code, ba.settlement AS bill_settlement, ba.street AS bill_street, ba.details AS bill_details, bill_name
+    $query = "SELECT DISTINCT c.name AS cname, c.phone, c.email, pa.post_code, pa.settlement, pa.street, pa.post_number, ba.post_code AS bill_post_code, ba.settlement AS bill_settlement, ba.street AS bill_street, ba.details AS bill_details, bill_name, tax_number
                 FROM orders o 
                     INNER JOIN customers c ON o.customers_id_customers = c.id_customers 
                     INNER JOIN deliveries d ON o.deliveries_id_deliveries = d.id_deliveries

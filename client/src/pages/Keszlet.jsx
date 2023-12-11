@@ -21,10 +21,12 @@ function Keszlet() {
         if (Array.isArray(res.data) && res.data.length > 0) {
           setData(res.data);
         } else {
-          setError("Űgy tűnik jelenleg nincs megjeleníthető adat.");
+          setError("Űgy tűnik jelenleg nincs készleten lévő termék.");
         }     
       } catch(err) {
-        console.log(err);
+        //console.log(err);
+        let errorMsg = err.message ?? "Hiba történt az adatok lekérése során.";
+        setError(errorMsg);
       } finally {
         setIsLoading(false);
       }
@@ -61,38 +63,30 @@ function Keszlet() {
     return <tbody>{rows}</tbody>;
   }
 
-  if (error !== "") {
-    return (
-      <p className='errormsg'>
-        {error}
-      </p>
-    );
-  }
-
   return (
     <div>
       <h1>Készlet</h1>
-
       <div className='flex-container'>
         {isLoading ? 
           (<Spinner>Loading...</Spinner>)
           :
-          (<>
+          (
             <div className='content'>
-              {data.length > 0 ? 
-              (<Table dark hover striped className='table caption-top'>
-                <caption>Jelenleg készleten lévő termék(ek)</caption>
-                {renderTableHeadingJSX()}
-                {renderTableData()}
-              </Table>
-              )  
-              : 
-              (<p>Nincs adatunk</p>)}
+              {error !== "" ? 
+                (<p className='errormsg'>{error}</p>)
+                :
+                (
+                <Table dark hover striped className='table caption-top'>
+                  <caption>Jelenleg készleten lévő termék(ek)</caption>
+                  {renderTableHeadingJSX()}
+                  {renderTableData()}
+                </Table>
+                )
+              }
             </div>
-          </>)
+          )
         }
       </div>
-
     </div>
   );
 }

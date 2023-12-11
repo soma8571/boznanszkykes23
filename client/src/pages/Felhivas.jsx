@@ -11,28 +11,33 @@ function Felhivas() {
   const [error, setError] = useState("");
   const [newAppeal, setNewAppeal] = useState("");
   const [deleteMsg, setDeleteMsg] = useState("");
+  const [noStoredAppeals, setNoStoredAppeals] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
       setIsLoading(true);
       try {
         const url = `${process.env.REACT_APP_API_URL}/felhivas`;
-        const res = await axios.get(url, {
+        const {data} = await axios.get(url, {
           headers: { Authorization: `Bearer ${cookies.accessToken}` } 
         });
-        if (res.statusText === "OK") {
-          if (Array.isArray(res.data) && res.data.length > 0) {
-            setAppeals(res.data);
-            //console.log(res.data);
-          } else {
-            setError("Űgy tűnik jelenleg nincs megjeleníthető adat.");
-          }
-          setIsLoading(false);
+        
+        if (Array.isArray(data) && data.length > 0) {
+          setAppeals(data);
+          //console.log(data);
+        } else {
+          //setError("Nincs rögzített felhívás.");
+          setNoStoredAppeals(true);
         }
+        
       } catch(err) {
           //console.log(err);
-          setIsLoading(false);
-          setError(err);
+          let errorMsg = err?.response?.data?.msg ?? 
+                          "Nincs rögzített felhívás.";
+          setError(errorMsg);
+          setNoStoredAppeals(true);
+      } finally {
+        setIsLoading(false);
       }
     }
 
@@ -96,35 +101,30 @@ function Felhivas() {
     return <tbody>{rows}</tbody>;
   }
 
-  if (error !== "") {
-    return (
-      <p className='errormsg'>
-        {error}
-      </p>
-    );
-  }
-
   return (
     <div>
       <h1>Felhívás</h1>
       <div className='flex-container-col'>
         <div className='content'>
-        {appeals.length > 0 &&
-        (
-          <Table dark className='table caption-top'>
-            <caption>Korábban létrehozott felhívások</caption>
-            {renderTableHeadingJSX()}
-            {renderTableDataJSX()}
-          </Table>
-        )}
+        {noStoredAppeals ? 
+          (<div style={{textAlign: "center", color: "gray" }}>
+            Még nincs rögzített felhívás a rendszerben.
+          </div>)
+          :
+          (
+            <Table dark className='table caption-top'>
+              <caption>Korábban létrehozott felhívások</caption>
+              {renderTableHeadingJSX()}
+              {renderTableDataJSX()}
+            </Table>
+          )
+        }
         </div>
         
         <div className='content'>
          <AppealForm setNewAppeal={setNewAppeal} /> 
         </div>
       </div>
-      
-      
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Modal,
   ModalBody,
@@ -13,32 +13,52 @@ import { useCookies } from "react-cookie";
 
 function MyModal({ isOpen, toggle, orderData }) {
 
+ /*  useEffect(()=>{
+    console.log(orderData);
+  }, [orderData]); */
+
   const [updateMsg, setUpdateMsg] = useState("");
   const [cookies] = useCookies(["accessToken"]);
-  let customerInfo = null;
-  let orderInfo = null;
+  const [customerInfo, setCustomerInfo] = useState({});
+  const [orderInfo, setOrderInfo] = useState([]);
 
-  if (Array.isArray(orderData) && orderData.length > 0) {
-    if (Array.isArray(orderData[0]) && orderData[0].length > 0) {
-      orderInfo = orderData[0];
-      //console.log(orderInfo);
+  useEffect(()=>{
+    if (Array.isArray(orderData) && orderData.length > 0) {
+      if (Array.isArray(orderData[0]) && orderData[0].length > 0) {
+        //Rendelési adatok: 0. indexen vannak a rendelési adatok, ami egy obj. tömb
+        setOrderInfo(orderData[0]);  
+      }
+  
+      if (Array.isArray(orderData[1]) && orderData[1].length > 0) {
+        setCustomerInfo(orderData[1][0]); //Vásárlói adatok objektuma
+      }
     }
+  }, [orderData]);
 
-    if (Array.isArray(orderData[1]) && orderData[1].length > 0) {
-      customerInfo = orderData[1][0]; //ez így már maga az object
-    }
+  function postAddressFormatter() {
+    let pa = `${customerInfo["post_code"]} 
+              ${customerInfo["settlement"]}, 
+              ${customerInfo["street"]}`;
+    return pa;
   }
 
-  function renderCustomerInfo() {
-    let postAddress = `${customerInfo["post_code"]} ${customerInfo["settlement"]}, ${customerInfo["street"]}`;
-    
-    let billAddress = "";
+  function billAddressFormatter() {
+    let ba = "";
     if (customerInfo["bill_post_code"] && customerInfo["bill_settlement"]) {
-      billAddress = `${customerInfo["bill_post_code"]} ${customerInfo["bill_settlement"]}, ${customerInfo["bill_street"]} ${customerInfo["bill_details"]}`;
+      ba = `${customerInfo["bill_post_code"]} 
+            ${customerInfo["bill_settlement"]}, 
+            ${customerInfo["bill_street"]} 
+            ${customerInfo["bill_details"]}`;
     } else {
-      billAddress = "postaival azonos";
+      ba = "kiszállítási címmel azonos";
     }
-    
+    return ba;
+  }
+
+  
+
+  /* function renderCustomerInfo() {
+
     let rows = (<>
       <tr key={customerInfo["cname"]}>
         <td>Vásárló neve</td><td>{customerInfo["cname"]}</td>
@@ -69,6 +89,56 @@ function MyModal({ isOpen, toggle, orderData }) {
       </tr>
     </>);
     return <tbody>{rows}</tbody>;
+  } */
+
+  function renderCustomerInfo_v2() {
+    let cInfo = 
+      <div className="cust-info-wrapper">
+        <div className="data-group" style={{ gridArea: "name"}}>
+          <label htmlFor="cust-name">Vásárló neve</label>
+          <div className="data" id="cust-name">{customerInfo["cname"]}</div>
+        </div>
+        <div className="data-group" style={{ gridArea: "email"}}>
+          <label htmlFor="cust-email">Email</label>
+          <div className="data" id="cust-email">{customerInfo["email"]}</div>
+        </div>
+        <div className="data-group" style={{ gridArea: "tel"}}>
+          <label htmlFor="cust-tel">Telefon</label>
+          <div className="data" id="cust-tel">{customerInfo["phone"]}</div>
+        </div>
+        <div className="data-group" style={{ gridArea: "tax-number"}}>
+          <label htmlFor="tax-number">Adószám (cég esetén)</label>
+          <div className="data" id="tax-number">
+            {customerInfo["tax_number"] ?? "-"}
+          </div>
+        </div>
+        <div className="data-group" style={{ gridArea: "del-type"}}>
+          <label htmlFor="del-type">Kiszállítás típusa</label>
+          <div className="data" id="del-type">
+            {deliveryFormatter(orderInfo[0]["delivery_type"])}
+          </div>
+        </div>
+        <div className="data-group" style={{ gridArea: "post-address"}}>
+          <label htmlFor="post-address">Kiszállítás címe</label>
+          <div className="data" id="post-address">{postAddressFormatter()}</div>
+        </div>
+        <div className="data-group" style={{ gridArea: "post-number"}}>
+          <label htmlFor="post-number">Posta vagy postapont száma</label>
+          <div className="data" id="post-number">
+            {customerInfo["post_number"] ?? "-"}
+          </div>
+        </div>
+        <div className="data-group" style={{ gridArea: "bill-name"}}>
+          <label htmlFor="bill-name">Számlázási név</label>
+          <div className="data" id="bill-name">
+            {customerInfo["bill_name"] ?? "-"}</div>
+        </div>
+        <div className="data-group" style={{ gridArea: "bill-address"}}>
+          <label htmlFor="bill-address">Számlázási cím</label>
+          <div className="data" id="bill-address">{billAddressFormatter()}</div>
+        </div>
+      </div>
+    return cInfo;
   }
 
   function renderOrderInfoHeader() {
@@ -91,12 +161,27 @@ function MyModal({ isOpen, toggle, orderData }) {
     for (let i=0; i < orderInfo.length; i++) {
       let row = (
         <tr key={i}>
-          <td key={`${i}-kname`}>{orderInfo[i]["kname"]}</td>
-          <td key={`${i}-blade`}>{orderInfo[i]["blade_material"]}</td>
-          <td key={`${i}-desc`} style={{ maxWidth: "12rem" }}>{orderInfo[i]["description"]}</td>
-          <td key={`${i}-quantity`}>{orderInfo[i]["quantity"]} db</td>
-          <td key={`${i}-price`}>{priceFormatter(orderInfo[i]["price"])}</td>
-          <td key={`${i}-total`}>{priceFormatter(orderInfo[i]["quantity"] * orderInfo[i]["price"])}</td>
+          <td key={`${i}-kname`}>
+            {orderInfo[i]["kname"]}
+          </td>
+          <td key={`${i}-blade`}>
+            {orderInfo[i]["blade_material"]}
+          </td>
+          <td key={`${i}-desc`} style={{ maxWidth: "12rem" }}>
+            {orderInfo[i]["description"]}
+          </td>
+          <td key={`${i}-quantity`}>
+            {orderInfo[i]["quantity"]} db {""}
+              <span className="from-store-quantity">
+                (készletről: {orderInfo[i]["from_store_quantity"]})
+              </span>
+          </td>
+          <td key={`${i}-price`}>
+            {priceFormatter(orderInfo[i]["price"])}
+          </td>
+          <td key={`${i}-total`}>
+            {priceFormatter(orderInfo[i]["quantity"] * orderInfo[i]["price"])}
+          </td>
         </tr>);
         sum += orderInfo[i]["quantity"] * orderInfo[i]["price"];
         rows.push(row);
@@ -205,31 +290,34 @@ function MyModal({ isOpen, toggle, orderData }) {
       <ModalHeader 
         toggle={toggle} 
         style={{ backgroundColor: "#00594F" }}
-      >A rendelés részletei
+      >
+        A rendelés részletei
       </ModalHeader>
       <ModalBody style={{ backgroundColor: "#00352F" }}>
         {updateMsg !== "" && (<div className="updateMsg">{updateMsg}</div>)}
-        {orderInfo ? (
-          <div style={{ margin: "1rem" }}>
+        {orderInfo.length > 0 ? 
+          (<div style={{ margin: "1rem" }}>
             <Table dark id="orderDetails">
             {renderOrderInfoHeader()}
             {renderOrderInfo()}
             </Table>
           </div>
-        )
-        :
-        (<p>Hiba a rendelés adatainak lekérdezése során.</p>)
+          )
+          :
+          (<p>Hiba a rendelés adatainak lekérdezése során.</p>)
         }
 
-        {customerInfo ? (
-          <div style={{ margin: "1rem" }}>
-            <Table dark id="orderDetails">
+        {Object.keys(customerInfo).length > 0 ? 
+          (<div style={{ margin: "1rem" }}>
+            {/* <Table dark id="orderDetails">
               {renderCustomerInfo()}
-            </Table>
+            </Table> */}
+            {renderCustomerInfo_v2()}
           </div>
-        ) : (
-          <p>Hiba a vásárlói adatok lekérése során.</p>
-        )}
+          ) 
+          : 
+          (<p>Hiba a vásárlói adatok lekérése során.</p>)
+        }
       </ModalBody>
       <ModalFooter style={{ backgroundColor: "#00594F" }}>
         <Button color="primary" onClick={toggle}>
