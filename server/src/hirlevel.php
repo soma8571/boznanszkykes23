@@ -19,7 +19,7 @@ function hirlevelMentese($vars, $body) {
         $pdo = getConnection();
         $saved = 0;
         $not_saved = 0;
-        if ($addresses = getEmailAddresses()) {
+        if ($addresses = getEmailAddresses(false)) {
             for ($i = 0; $i < count($addresses); $i++) {
                 $insert = "INSERT INTO newsletters (title, body, sendDate, status, address) VALUES (?, ?, ?, ?, ?)";
                 $statement = $pdo->prepare($insert);
@@ -48,7 +48,7 @@ function hirlevelMentese($vars, $body) {
 }
 
 function getEmailAddresses($onlyNewsletterTrue = true) {
-    /* $pdo = getConnection();
+    $pdo = getConnection();
     if ($onlyNewsletterTrue) {
         $query = "SELECT DISTINCT email FROM customers WHERE newsletter = 1";
     } else {
@@ -59,11 +59,11 @@ function getEmailAddresses($onlyNewsletterTrue = true) {
     if ($statement->rowCount() > 0) {
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
-    return false; */
+    return false;
 
 
     /* TESZTHEZ */
-    $test_addresses = [
+    /* $test_addresses = [
         ["email" => "tamas.somloi@gmail.com"],
         ["email" => "support@hrcpayouts.com"],
         ["email" => "tamas.somloi@gmail.com"],
@@ -75,7 +75,7 @@ function getEmailAddresses($onlyNewsletterTrue = true) {
         ["email" => "tamas.somloi@gmail.com"],
         ["email" => "tamas.somloi@gmail.com"]
     ];
-    return $test_addresses;
+    return $test_addresses; */
 }
 
 ?>

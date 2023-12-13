@@ -4,7 +4,7 @@ require __DIR__."/src/common.php";
 
 $folder = "";
 if ($_SERVER['SERVER_NAME'] === "localhost") {
-    header("Access-Control-Allow-Origin: http://localhost:3000");
+    header("Access-Control-Allow-Origin: http://localhost:3001");
     $folder = "/boznanszkykes23/";
 } else {
     header("Access-Control-Allow-Origin: https://admin.boznanszkykes.hu");
