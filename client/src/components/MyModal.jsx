@@ -148,11 +148,21 @@ function MyModal({ isOpen, toggle, orderData }) {
         <th>Penge</th>
         <th>Leírás</th>
         <th>Mennyiség</th>
-        <th>Egységár</th>
+        <th>Eredeti ár</th>
+        <th>Eladási ár</th>
+        <th>Akció %</th>
         <th>Tétel összesen</th>
       </tr>
     );
     return <thead>{header}</thead>
+  }
+
+  function calcDiscountIfWas(original_price, sold_price) {
+    //ha a termék eredeti ára különbözik az eladási ártól akkor visszatér a kedvezmény %-val. Ellenkező esetben "Nem akciós" értékkel
+    if (Number(original_price) < 1 || Number(sold_price) < 1) return "Nem ismert";
+    if (Number(original_price) === Number(sold_price)) return "Nem akciós";
+    let discountPerc = Math.round((1 - Number(sold_price) / Number(original_price)) * 100);
+    return `${discountPerc} %`;
   }
 
   function renderOrderInfo() {
@@ -176,8 +186,18 @@ function MyModal({ isOpen, toggle, orderData }) {
                 (készletről: {orderInfo[i]["from_store_quantity"]})
               </span>
           </td>
+          <td key={`${i}-original_price`}>
+            {Number(orderInfo[i]["original_price"]) > 0 ? 
+              priceFormatter(orderInfo[i]["original_price"])
+              :
+              "Nem ismert"
+            }
+          </td>
           <td key={`${i}-price`}>
             {priceFormatter(orderInfo[i]["price"])}
+          </td>
+          <td key={`${i}-sale_perc`}>
+            {calcDiscountIfWas(orderInfo[i]["original_price"], orderInfo[i]["price"])}
           </td>
           <td key={`${i}-total`}>
             {priceFormatter(orderInfo[i]["quantity"] * orderInfo[i]["price"])}
@@ -189,26 +209,26 @@ function MyModal({ isOpen, toggle, orderData }) {
       
       let row1 = 
           <tr key={"1st"}>
-            <td key={"1-1st"} colSpan={5}>Rendelés összértéke:</td>
+            <td key={"1-1st"} colSpan={7}>Rendelés összértéke:</td>
             <td key={"1-2nd"} colSpan={1}>{priceFormatter(sum)}</td>
           </tr>;
       let row2 = 
         <tr key={"2nd"}>
-          <td key={"2-1st"} colSpan={5}>Kiszállítás díja:</td>
+          <td key={"2-1st"} colSpan={7}>Kiszállítás díja:</td>
           <td key={"2-2nd"} colSpan={1}>
             {priceFormatter(orderInfo[0]["delivery_cost"])}
           </td>
         </tr>;
       let row3 =
         <tr key={"3rd"}>
-          <td key={"3-1st"} colSpan={5}>Összes fizetendő:</td>
+          <td key={"3-1st"} colSpan={7}>Összes fizetendő:</td>
           <td key={"3-2nd"} colSpan={1}>
             {priceFormatter(calculateTotal(sum, orderInfo[0]["delivery_cost"]))}
           </td>
         </tr>;
       let row4 = 
         <tr key={"4th"}>
-          <td key={"4-1st"} colSpan={5}>Fizetési mód:</td>
+          <td key={"4-1st"} colSpan={7}>Fizetési mód:</td>
           <td key={"4-2nd"} colSpan={1}>
             {deliveryFormatter(orderInfo[0]["payment_method"])}
           </td>
@@ -216,12 +236,12 @@ function MyModal({ isOpen, toggle, orderData }) {
       let row5 =
         <tr key={"5th"}>
           <td key={"5-1st"}>Rendelés dátuma:</td>
-          <td key={"5-2nd"} colSpan={5}>{orderInfo[0]["date"]}</td>
+          <td key={"5-2nd"} colSpan={7}>{orderInfo[0]["date"]}</td>
         </tr>;
       let row6 =
         <tr key={"6th"}>
           <td key={"6-1st"}>Vásárlói megjegyzés:</td>
-          <td key={"6-2nd"} colSpan={5}>{orderInfo[0]["customer_comment"]}</td>
+          <td key={"6-2nd"} colSpan={7}>{orderInfo[0]["customer_comment"]}</td>
         </tr>;
       let row7 =
         <tr key={"7th"}>
@@ -237,7 +257,7 @@ function MyModal({ isOpen, toggle, orderData }) {
                 {renderStateOptions(orderInfo[0]["status"])}
             </select>
           </td>
-          <td key={"7-3rd"} colSpan={4}></td>
+          <td key={"7-3rd"} colSpan={6}></td>
         </tr>;
       rows.push(row1, row2, row3, row4, row5, row6, row7);
       return <tbody key={"tb-01"}>{rows}</tbody>;

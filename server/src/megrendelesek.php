@@ -45,7 +45,7 @@ function megrendelesek() {
 function megrendelesAdatok($vars) {
     auth();
     $pdo = getConnection();
-    $query = "SELECT k.name AS kname, k.blade_material, k.description, o.price, o.quantity, o.date, o.comment, o.from_store_quantity, d.*
+    $query = "SELECT k.name AS kname, k.blade_material, k.description, o.*, d.*
                 FROM orders o
                     INNER JOIN knives k ON o.knives_id_knives = k.id_knives  
                     INNER JOIN deliveries d ON o.deliveries_id_deliveries = d.id_deliveries
